@@ -1,40 +1,2224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Movie & Series App - KaziFlix</title>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2137920351233463"
-     crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <!-- HLS.js for Streaming .m3u8 Playlists -->
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <style>
-    :root {
-      --bg-color: #0b0a10;
-      --card-bg: #13121b;
-      --card-border: #1f1d2b;
-      --text-main: #ffffff;
-      --text-muted: #8e8d9a;
-      --accent-purple: #7c3aed;
-      --accent-pill: #8b5cf6;
-      --accent-glow: rgba(124, 58, 237, 0.35);
-      --danger-red: #ef4444;
-      --input-bg: #111018;
-      --success-green: #10b981;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#0b0a10"/>
+<meta name="description" content="KaziFlix — Stream movies and TV shows."/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="referrer" content="no-referrer"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>"/>
+<title>KaziFlix</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.15/dist/hls.min.js"></script>
+<style>
+:root{--bg-color:#0b0a10;--card-bg:#13121b;--card-border:#1f1d2b;--text-main:#fff;--text-muted:#a2a1ae;--accent-purple:#7c3aed;--accent-hover:#6d28d9;--accent-pill:#8b5cf6;--accent-glow:rgba(124,58,237,0.35);--danger-red:#ef4444;--input-bg:#111018;--success-green:#10b981;--warning-gold:#f59e0b;--info-blue:#38bdf8}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+body{background-color:var(--bg-color);color:var(--text-main);padding:12px 10px calc(90px + env(safe-area-inset-bottom,0));max-width:1200px;margin:0 auto;min-height:100vh;line-height:1.4;overflow-x:hidden}
+body.details-active{padding:0 0 calc(90px + env(safe-area-inset-bottom,0))}
+body.modal-locked{overflow:hidden}
+
+.btn{background-color:var(--accent-purple);color:#fff;border:none;padding:12px 22px;border-radius:10px;font-weight:600;cursor:pointer;font-size:0.95rem;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:background-color 0.2s ease;font-family:inherit}
+.btn:hover{background-color:var(--accent-hover)}
+.btn:disabled{opacity:0.6;cursor:not-allowed}
+.btn-sm{padding:8px 14px;font-size:0.82rem}
+.btn-ghost{background:transparent;border:1px solid var(--card-border);color:var(--text-main)}
+.btn-ghost:hover{border-color:var(--accent-purple);background:rgba(124,58,237,0.08)}
+.btn-container{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.btn-container .btn{flex:1}
+
+#paywallOverlay{position:fixed;inset:0;background:var(--bg-color);z-index:2500;display:none;overflow-y:auto;padding:24px 16px calc(90px + env(safe-area-inset-bottom,0))}
+#paywallOverlay.active{display:block}
+.pw-card{max-width:520px;margin:24px auto;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,0.6)}
+.pw-icon{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--accent-purple),#ec4899);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:#fff;margin:0 auto 14px;box-shadow:0 10px 22px var(--accent-glow)}
+.pw-title{font-size:1.4rem;font-weight:800;text-align:center;margin-bottom:6px}
+.pw-sub{text-align:center;color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;line-height:1.5}
+.plan-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.plan-item{background:var(--input-bg);border:1px solid var(--card-border);border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.2s}
+.plan-item:hover{border-color:var(--accent-purple);transform:translateY(-2px);box-shadow:0 6px 16px rgba(124,58,237,0.15)}
+.plan-item.featured{border-color:var(--accent-pill);background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(236,72,153,0.06))}
+.plan-item .name{font-weight:700;font-size:1.02rem;margin-bottom:2px}
+.plan-item .duration{font-size:0.78rem;color:var(--text-muted)}
+.plan-item .price{font-size:1.15rem;font-weight:800;color:var(--accent-pill)}
+.plan-item .price small{font-size:0.72rem;font-weight:600;color:var(--text-muted);display:block;text-align:right}
+.pw-notice{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.35);border-radius:12px;padding:14px;font-size:0.85rem;color:#fcd34d;line-height:1.5;margin-bottom:16px}
+.pw-notice i{color:var(--warning-gold);margin-right:6px}
+.pending-banner{display:none;align-items:center;gap:12px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.4);border-radius:14px;padding:12px 14px;margin-bottom:10px;cursor:pointer;color:#bae6fd}
+.pending-banner.show{display:flex}
+.pending-banner i:first-child{font-size:1.3rem;color:var(--info-blue);flex-shrink:0}
+.pending-banner .pb-text{flex:1;font-size:0.83rem;line-height:1.35}
+.pending-banner .pb-text strong{display:block;font-size:0.92rem;margin-bottom:2px;color:#e0f2fe}
+.pay-details{background:var(--input-bg);border:1px solid var(--card-border);border-radius:12px;padding:16px;margin-bottom:16px}
+.pay-details .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--card-border);font-size:0.9rem}
+.pay-details .row:last-child{border-bottom:none}
+.pay-details .row .lbl{color:var(--text-muted)}
+.pay-details .row .val{font-weight:700}
+.pay-details .row .val.copy{cursor:pointer;color:var(--accent-pill)}
+.pay-details .row .val.copy:hover{text-decoration:underline}
+.pf-label{font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:6px;display:block}
+.pf-input{width:100%;padding:12px 14px;background:var(--input-bg);border:1px solid var(--card-border);border-radius:10px;color:var(--text-main);font-size:0.95rem;outline:none;margin-bottom:14px;transition:all 0.2s}
+.pf-input:focus{border-color:var(--accent-purple);box-shadow:0 0 0 3px var(--accent-glow)}
+.pf-input.invalid{border-color:var(--danger-red)}
+.pending-icon{width:80px;height:80px;border-radius:50%;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:var(--info-blue);margin:0 auto 18px;animation:pulse-soft 2.5s infinite}
+@keyframes pulse-soft{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(56,189,248,0.4)}50%{transform:scale(1.03);box-shadow:0 0 0 16px rgba(56,189,248,0)}}
+.sub-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:10px;font-size:0.8rem;font-weight:700;margin-top:8px}
+.sub-badge.free_trial{background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:var(--info-blue)}
+.sub-badge.active{background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:var(--success-green)}
+.sub-badge.pending_approval{background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--warning-gold)}
+.sub-badge.expired,.sub-badge.inactive{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:var(--danger-red)}
+.search-page{display:none}
+.search-page-header{position:relative;background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:10px 16px;margin-bottom:12px}
+.search-wrapper{display:flex;align-items:center;gap:12px}
+.search-wrapper > i{color:var(--text-muted);font-size:1.1rem}
+.search-input{background:transparent;border:none;outline:none;color:var(--text-main);font-size:0.95rem;width:100%}
+.clear-search-btn{background:transparent;border:none;color:var(--text-muted);cursor:pointer;padding:4px;font-size:1rem}
+.search-suggest{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;z-index:400;display:none;max-height:60vh;overflow-y:auto}
+.search-suggest.show{display:block}
+.suggest-item{padding:10px 14px;display:flex;gap:10px;align-items:center;cursor:pointer;border-bottom:1px solid var(--card-border)}
+.suggest-item:hover{background:rgba(124,58,237,0.1)}
+.suggest-item img{width:32px;height:48px;border-radius:4px;object-fit:cover;background:#000}
+.search-empty{text-align:center;padding:60px 20px;color:var(--text-muted)}
+.search-empty i{font-size:3rem;opacity:0.25;display:block;margin-bottom:16px}
+.search-loading{display:flex;align-items:center;gap:10px;justify-content:center;padding:14px;color:var(--text-muted);font-size:0.85rem}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(19,18,27,0.94);backdrop-filter:blur(12px);border-top:1px solid var(--card-border);display:flex;justify-content:space-around;align-items:center;padding:8px 4px calc(8px + env(safe-area-inset-bottom,0));z-index:1500;max-width:1200px;margin:0 auto}
+.nav-item{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;background:transparent;border:none;color:var(--text-muted);font-size:0.68rem;font-weight:600;cursor:pointer;padding:6px 4px;border-radius:10px;flex:1;min-width:0;min-height:48px;justify-content:center}
+.nav-item i{font-size:1.15rem}
+.nav-item span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.nav-item.active,.nav-item:hover{color:var(--accent-pill)}
+.nav-badge{position:absolute;top:2px;right:calc(50% - 18px);background:var(--danger-red);color:#fff;border-radius:10px;font-size:0.6rem;font-weight:700;padding:1px 5px}
+.nav-badge.hidden{display:none}
+.toast-container{position:fixed;bottom:calc(84px + env(safe-area-inset-bottom,0));right:24px;z-index:10000;display:flex;flex-direction:column;gap:10px;pointer-events:none;max-width:calc(100vw - 48px)}
+.toast{background:#1f1d2b;color:#fff;border:1px solid var(--accent-purple);padding:12px 20px;border-radius:12px;font-size:0.88rem;font-weight:600;display:flex;align-items:center;gap:10px;box-shadow:0 10px 25px rgba(0,0,0,0.5);animation:toastIn 0.3s cubic-bezier(0.16,1,0.3,1),toastOut 0.3s cubic-bezier(0.16,1,0.3,1) 2.7s forwards}
+.toast.persist{animation:toastIn 0.3s cubic-bezier(0.16,1,0.3,1)}
+@keyframes toastIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes toastOut{from{opacity:1}to{opacity:0;transform:translateY(-10px)}}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text-muted)}
+.empty-state i{font-size:2.5rem;margin-bottom:12px;opacity:0.4;display:block}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.active{display:flex}
+.update-modal{background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;width:100%;max-width:440px;box-shadow:0 20px 50px rgba(0,0,0,0.7);overflow:hidden}
+.update-modal-header{background:linear-gradient(135deg,rgba(124,58,237,0.25),rgba(236,72,153,0.15));padding:24px;border-bottom:1px solid var(--card-border);display:flex;align-items:center;gap:16px}
+.update-icon-wrapper{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--accent-purple),#ec4899);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#fff;flex-shrink:0}
+.update-modal-title{font-size:1.2rem;font-weight:800;line-height:1.2}
+.update-modal-body{padding:20px 24px}
+.update-version-tag{font-size:0.82rem;font-weight:700;color:var(--accent-pill);background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:12px}
+.update-modal-desc{color:var(--text-muted);font-size:0.9rem;line-height:1.5;background:var(--input-bg);border:1px solid var(--card-border);border-radius:12px;padding:14px;margin-bottom:14px;white-space:pre-wrap;word-break:break-word}
+.update-link-box{display:flex;gap:8px;background:var(--input-bg);border:1px solid var(--card-border);border-radius:12px;padding:6px;margin-bottom:16px}
+.update-link-input{background:transparent;border:none;outline:none;color:var(--text-muted);font-size:0.82rem;flex:1;padding:6px}
+.btn-copy-update{background:var(--card-bg);border:1px solid var(--card-border);color:var(--text-main);padding:8px 14px;border-radius:8px;font-weight:600;font-size:0.8rem;cursor:pointer;white-space:nowrap}
+.update-actions-row{display:flex;gap:10px}
+.btn-download-update{flex:1;background:linear-gradient(135deg,var(--accent-purple),#6d28d9);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-dismiss-update{background:var(--input-bg);border:1px solid var(--card-border);color:var(--text-muted);padding:12px 16px;border-radius:12px;font-weight:600;font-size:0.92rem;cursor:pointer}
+.auth-modal{position:fixed;inset:0;background:rgba(11,10,16,0.97);backdrop-filter:blur(10px);z-index:4500;display:none;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
+.auth-modal.active{display:flex}
+.auth-modal-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:28px 24px;width:100%;max-width:420px;position:relative;box-shadow:0 25px 60px rgba(0,0,0,0.7);margin:auto}
+.auth-close{position:absolute;top:14px;right:14px;background:transparent;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;padding:6px;border-radius:8px;line-height:1}
+.auth-close:hover{color:var(--text-main);background:rgba(255,255,255,0.05)}
+.auth-logo{width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,var(--accent-purple),#ec4899);display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:#fff;margin:0 auto 14px;box-shadow:0 10px 22px var(--accent-glow)}
+.auth-title{font-size:1.35rem;font-weight:800;text-align:center;margin-bottom:6px}
+.auth-subtitle{text-align:center;color:var(--text-muted);font-size:0.87rem;margin-bottom:20px}
+.google-signin-btn{width:100%;background:#fff;color:#1f1f1f;border:1px solid #dadce0;padding:13px 16px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;font-family:inherit}
+.google-signin-btn:hover{background:#f5f5f5}
+.google-signin-btn i{font-size:1.15rem;color:#4285F4}
+.auth-divider{text-align:center;color:var(--text-muted);font-size:0.78rem;margin:16px 0;position:relative}
+.auth-divider::before,.auth-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--card-border)}
+.auth-divider::before{left:0}
+.auth-divider::after{right:0}
+.auth-input{width:100%;padding:13px 14px;background:var(--input-bg);border:1px solid var(--card-border);border-radius:10px;color:var(--text-main);font-size:0.95rem;outline:none;margin-bottom:12px;font-family:inherit}
+.auth-input:focus{border-color:var(--accent-purple);box-shadow:0 0 0 3px var(--accent-glow)}
+.auth-error{color:var(--danger-red);font-size:0.82rem;margin-bottom:10px;min-height:1em;text-align:left;line-height:1.4}
+.auth-submit-btn{width:100%;background:var(--accent-purple);color:#fff;border:none;padding:13px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;font-family:inherit}
+.auth-submit-btn:hover{background:var(--accent-hover)}
+.auth-submit-btn:disabled{opacity:0.6;cursor:not-allowed}
+.auth-links{text-align:center;margin-top:16px;font-size:0.85rem}
+.auth-link{background:none;border:none;color:var(--accent-pill);cursor:pointer;font-size:0.85rem;font-weight:600;padding:4px 2px;font-family:inherit}
+.auth-link:hover{text-decoration:underline}
+.auth-dot{color:var(--text-muted);margin:0 8px}
+.avatar-picker-section{margin-top:8px}
+.avatar-picker-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:0.87rem;font-weight:600;color:var(--text-muted)}
+.btn-shuffle{background:var(--input-bg);border:1px solid var(--card-border);color:var(--text-muted);padding:6px 12px;border-radius:8px;font-size:0.78rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.btn-shuffle:hover{border-color:var(--accent-purple);color:var(--text-main)}
+.avatar-picker-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.avatar-option{aspect-ratio:1;border-radius:50%;background:var(--input-bg);border:2px solid var(--card-border);cursor:pointer;overflow:hidden;padding:4px;transition:all 0.15s;display:flex;align-items:center;justify-content:center}
+.avatar-option img{width:100%;height:100%;object-fit:contain;display:block;border-radius:50%}
+.avatar-option:hover{border-color:var(--accent-purple);transform:scale(1.05)}
+.avatar-option.selected{border-color:var(--accent-purple);box-shadow:0 0 0 3px var(--accent-glow);background:rgba(124,58,237,0.12)}
+.guest-prompt{background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(236,72,153,0.08));border:1px solid rgba(124,58,237,0.35);border-radius:16px;padding:24px 20px;text-align:center;margin-bottom:14px}
+.guest-prompt > i{font-size:2.2rem;color:var(--accent-pill);margin-bottom:12px;display:block}
+.guest-prompt h3{font-size:1.1rem;font-weight:800;margin-bottom:8px}
+.guest-prompt p{color:var(--text-muted);font-size:0.87rem;margin-bottom:16px;line-height:1.5}
+.guest-prompt .btn{width:100%;max-width:280px;margin:0 auto}
+
+/* ===== HERO (COMPACT) ===== */
+.hero-container{position:relative;margin-bottom:12px;width:100%}
+.hero-banner{position:relative;overflow:hidden;min-height:260px;cursor:pointer;display:flex;align-items:center;background:transparent;transition:transform 0.2s ease;border-radius:14px}
+.hero-backdrop{position:absolute;inset:0;background-size:cover;background-position:center 15%;opacity:0.9;transition:opacity 0.5s ease}
+.hero-banner::before{content:'';position:absolute;inset:0;background:linear-gradient(to right, var(--bg-color) 0%, rgba(11,10,16,0.8) 30%, transparent 65%, var(--bg-color) 100%);z-index:1;border-radius:14px}
+.hero-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(to top, var(--bg-color) 0%, transparent 45%);z-index:1;border-radius:14px}
+.hero-content{position:relative;z-index:2;display:flex;gap:20px;padding:20px 16px;align-items:center;width:100%;max-width:1200px;margin:0 auto}
+.hero-poster{width:120px;height:180px;border-radius:8px;object-fit:cover;box-shadow:0 12px 30px rgba(0,0,0,0.8);flex-shrink:0;background:var(--input-bg)}
+.hero-details{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+.hero-title{font-size:1.55rem;font-weight:800;margin-bottom:2px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,0.6);line-height:1.15}
+.hero-genres{display:flex;align-items:center;gap:8px;color:#e2e8f0;font-size:0.85rem;font-weight:500;margin-bottom:2px;text-shadow:0 1px 4px rgba(0,0,0,0.6)}
+.hero-genres i{font-size:1rem;color:#cbd5e1}
+.hero-description{color:#cbd5e1;font-size:0.85rem;line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 4px rgba(0,0,0,0.6)}
+.hero-dots{position:absolute;bottom:14px;right:18px;display:flex;gap:6px;z-index:5}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.3);cursor:pointer;transition:all 0.25s ease}
+.hero-dot.active{background:#fff;transform:scale(1.4);width:16px;border-radius:3px}
+
+@media(max-width:600px){
+  .hero-banner{min-height:200px}
+  .hero-poster{width:95px;height:140px}
+  .hero-title{font-size:1.25rem}
+  .hero-content{gap:14px;padding:14px 14px}
+  .hero-description{font-size:0.8rem;-webkit-line-clamp:2}
+  .hero-dots{bottom:10px;right:12px}
+}
+
+/* ===== SECTION HEADERS (TIGHTER) ===== */
+.section-header{display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px}
+.section-header:first-child{margin-top:4px}
+.section-title{display:flex;align-items:center;gap:8px;font-size:1.05rem;font-weight:700;letter-spacing:-0.01em}
+.title-pill{width:3px;height:16px;background:var(--accent-pill);border-radius:4px}
+.category-arrow-btn{color:var(--text-muted);font-size:0.78rem;cursor:pointer;padding:5px 10px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid var(--card-border);display:inline-flex;align-items:center;gap:4px;font-weight:600;transition:all 0.2s}
+.category-arrow-btn:hover{border-color:var(--accent-purple);color:#fff;background:rgba(124,58,237,0.12)}
+.category-arrow-btn span{font-size:0.72rem}
+
+/* ===== RECENTLY WATCHED ===== */
+.river-container{position:relative;overflow:hidden;margin-bottom:8px}
+.river-row{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px 2px;-ms-overflow-style:none;scrollbar-width:none}
+.river-row::-webkit-scrollbar{display:none}
+.river-card{min-width:230px;max-width:230px;height:132px;flex-shrink:0;border-radius:14px;position:relative;overflow:hidden;cursor:pointer;border:1px solid var(--card-border);background-color:#0e0d15;transition:transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease}
+.river-card:hover{transform:translateY(-3px);border-color:var(--accent-purple);box-shadow:0 10px 24px rgba(124,58,237,0.22)}
+.river-backdrop{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 0.4s ease}
+.river-card:hover .river-backdrop{transform:scale(1.06)}
+.river-gradient{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.05) 25%,rgba(11,10,16,0.55) 60%,rgba(11,10,16,0.96) 100%);z-index:1}
+.river-play-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.85);width:44px;height:44px;border-radius:50%;background:rgba(124,58,237,0.92);display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.95rem;z-index:3;opacity:0;transition:opacity 0.25s ease, transform 0.25s ease;box-shadow:0 6px 20px rgba(124,58,237,0.5)}
+.river-card:hover .river-play-icon{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.river-card-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:10px 12px;z-index:2}
+.river-card-title{font-size:0.92rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 4px rgba(0,0,0,0.8)}
+.river-card-meta{display:flex;align-items:center;gap:6px;margin-top:3px;font-size:0.68rem;color:#cbd5e1;font-weight:600}
+.river-card-badge{background:rgba(124,58,237,0.95);color:#fff;padding:2px 6px;border-radius:4px;font-weight:800;font-size:0.62rem;letter-spacing:0.02em;text-transform:uppercase}
+.river-card-ep{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100px}
+.river-progress{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.15);z-index:4}
+.river-progress-fill{height:100%;background:linear-gradient(90deg,#8b5cf6,#ec4899);border-radius:0 2px 2px 0}
+
+/* ===== VJ CHIPS ===== */
+.vj-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:6px;-ms-overflow-style:none;scrollbar-width:none}
+.vj-row::-webkit-scrollbar{display:none}
+.vj-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border:1px solid var(--card-border);padding:5px 12px 5px 5px;border-radius:20px;cursor:pointer;flex-shrink:0;transition:all 0.2s}
+.vj-chip:hover{border-color:var(--accent-purple);background:rgba(124,58,237,0.1);transform:translateY(-1px)}
+.vj-chip-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#c084fc,#8b5cf6);color:#0b0a10;font-weight:800;font-size:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.vj-chip-name{font-size:0.82rem;font-weight:700;white-space:nowrap;color:#e2e8f0}
+
+/* ===== MOVIE CARDS ===== */
+.movies-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;margin-bottom:6px;-ms-overflow-style:none;scrollbar-width:none}
+.movies-row::-webkit-scrollbar{display:none}
+.movie-card{min-width:120px;max-width:120px;flex-shrink:0;background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;overflow:hidden;cursor:pointer;transition:transform 0.2s,border-color 0.25s,box-shadow 0.25s;display:flex;flex-direction:column}
+.movie-card:hover{transform:translateY(-4px);border-color:rgba(124,58,237,0.5);box-shadow:0 10px 22px rgba(0,0,0,0.5)}
+.poster-container{position:relative;width:100%;height:160px;background:var(--input-bg);overflow:hidden}
+.movie-poster{width:100%;height:100%;object-fit:cover;display:block}
+.vj-badge{position:absolute;top:6px;left:6px;background:rgba(124,58,237,0.95);color:#fff;font-size:0.58rem;font-weight:800;padding:2px 6px;border-radius:4px;z-index:2;text-transform:uppercase;letter-spacing:0.02em;backdrop-filter:blur(4px)}
+.card-progress-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.15);z-index:3}
+.card-progress-fill{height:100%;background:linear-gradient(90deg,#8b5cf6,#ec4899)}
+.card-info{padding:7px 9px 9px;display:flex;flex-direction:column;gap:1px;background:var(--card-bg)}
+.movie-name{font-size:0.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f1f5f9}
+.movie-sub{font-size:0.68rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.category-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.category-grid .movie-card{min-width:100%;max-width:100%}
+.category-view,.details-page,.chat-page,.profile-page,.settings-page,.mylist-page,.about-page,.search-page,.plans-page,.payment-page,.pending-page,.downloads-page{display:none}
+.back-nav{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer;font-size:0.88rem;font-weight:600;background:rgba(21,20,30,0.8);border:1px solid var(--card-border);padding:8px 14px;border-radius:10px}
+.details-page{background:var(--bg-color);min-height:100vh;padding-bottom:60px}
+.details-loading{position:fixed;inset:0;background:var(--bg-color);z-index:300;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.details-loading.show{display:flex}
+.details-header-immersive{position:relative;width:100%;height:clamp(300px,55vh,480px);overflow:hidden}
+.details-backdrop-img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.details-top-actions{position:absolute;top:16px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;z-index:20}
+.icon-btn-round{background:rgba(11,10,16,0.6);width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;border:1px solid rgba(255,255,255,0.15);font-size:1.1rem;backdrop-filter:blur(12px)}
+.details-top-right-group{display:flex;gap:10px;align-items:center}
+.details-overlay-gradient{position:absolute;bottom:0;left:0;right:0;height:320px;background:linear-gradient(180deg,rgba(11,10,16,0) 0%,rgba(11,10,16,0.65) 35%,var(--bg-color) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:0 16px 20px;z-index:6;pointer-events:none}
+.details-title-row{font-size:2.2rem;font-weight:800;color:#fff;margin-bottom:8px;line-height:1.1}
+.details-sub-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;font-size:0.9rem;color:#d1d5db;font-weight:500}
+.vj-tag-pill{background:rgba(255,255,255,0.15);color:#fff;padding:4px 12px;border-radius:6px;font-size:0.78rem;font-weight:700;text-transform:uppercase}
+.details-actions-row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.btn-action-primary,.btn-action-secondary{flex:1;min-width:120px;background:#c084fc;color:#0b0a10;border:none;padding:12px 16px;border-radius:14px;font-weight:800;font-size:0.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-action-secondary{background:#1f1d2b;color:#fff;border:1px solid var(--card-border)}
+.details-body-section{padding:0 16px}
+.details-desc-text{color:var(--text-muted);font-size:0.92rem;line-height:1.5;margin:4px 0 16px;white-space:pre-wrap;word-break:break-word}
+.tmdb-section-title{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:10px;margin-top:16px}
+.cast-card{min-width:120px;max-width:120px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:10px;text-align:center;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px}
+.cast-avatar{width:75px;height:75px;border-radius:50%;object-fit:cover;background:var(--input-bg);border:2px solid var(--card-border)}
+.cast-name{font-size:0.82rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.cast-character{font-size:0.7rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.trailer-card{min-width:200px;max-width:200px;height:115px;border-radius:12px;background-color:var(--card-bg);border:1px solid var(--card-border);position:relative;overflow:hidden;cursor:pointer;flex-shrink:0;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center}
+.trailer-card::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.4);z-index:1}
+.trailer-play-icon{position:relative;z-index:2;width:34px;height:34px;border-radius:50%;background:rgba(124,58,237,0.85);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.85rem}
+.trailer-label{position:absolute;bottom:6px;left:6px;right:6px;z-index:2;font-size:0.68rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.season-selector-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:14px;margin-bottom:16px}
+.season-header-row{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.season-header-title{font-size:1.05rem;font-weight:700;color:#fff}
+.season-card-item{min-width:135px;max-width:135px;background:#1a1824;border:1px solid var(--card-border);border-radius:10px;padding:6px;cursor:pointer;flex-shrink:0;display:flex;flex-direction:column;gap:6px}
+.season-card-item:hover,.season-card-item.active{border-color:var(--accent-pill);background:#221f30}
+.season-card-thumb{width:100%;height:75px;border-radius:6px;object-fit:cover;background:#000}
+.season-card-name{font-size:0.82rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.season-card-eps{font-size:0.7rem;color:var(--text-muted)}
+.episodes-horizontal-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;-ms-overflow-style:none;scrollbar-width:none}
+.episodes-horizontal-row::-webkit-scrollbar{display:none}
+.episode-tile{min-width:200px;max-width:200px;height:120px;border-radius:12px;background-color:var(--card-bg);border:1px solid var(--card-border);position:relative;overflow:hidden;cursor:pointer;flex-shrink:0;background-size:cover;background-position:center;display:flex;flex-direction:column;justify-content:flex-end;padding:8px}
+.episode-tile:hover{transform:translateY(-3px);border-color:var(--accent-purple)}
+.episode-tile.playing{border-color:var(--accent-pill);box-shadow:0 0 0 2px rgba(124,58,237,0.35)}
+.episode-tile::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.1) 20%,rgba(11,10,16,0.85) 100%);z-index:1}
+.episode-tile-content{position:relative;z-index:2;display:flex;flex-direction:column;gap:2px}
+.episode-duration-badge{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.6);color:#fff;font-size:0.68rem;font-weight:700;padding:2px 6px;border-radius:4px;z-index:2}
+.episode-tile-sub{font-size:0.68rem;color:#c084fc;font-weight:700;text-transform:uppercase}
+.episode-tile-title{font-size:0.82rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.cast-horizontal-row,
+.trailers-horizontal-row,
+.season-row-scroll {display:flex;flex-direction:row;gap:12px;overflow-x:auto;overflow-y:hidden;padding:2px 2px 8px 2px;margin-bottom:14px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;-ms-overflow-style:none;scrollbar-width:none;}
+.cast-horizontal-row::-webkit-scrollbar,
+.trailers-horizontal-row::-webkit-scrollbar,
+.season-row-scroll::-webkit-scrollbar { display: none; }
+.cast-horizontal-row > *,
+.trailers-horizontal-row > *,
+.season-row-scroll > * { flex-shrink: 0; }
+
+/* ===== VIDEO PLAYER ===== */
+.video-player-container{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;z-index:15;display:none;overflow:hidden}
+.video-player-container video,.video-player-container iframe{width:100%;height:100%;border:none;outline:none;object-fit:contain;background:#000;display:block}
+.video-loading-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:20;backdrop-filter:blur(4px)}
+.spinner{width:42px;height:42px;border:4px solid rgba(255,255,255,0.1);border-top-color:var(--accent-pill);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.player-close-btn{position:absolute;top:14px;left:14px;z-index:25;background:rgba(11,10,16,0.7);color:#fff;border:1px solid rgba(255,255,255,0.2);width:42px;height:42px;border-radius:50%;font-size:1.05rem;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px)}
+.player-close-btn:hover{background:rgba(124,58,237,0.7)}
+
+.chat-container{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;height:calc(100vh - 150px - env(safe-area-inset-bottom,0));display:flex;flex-direction:column;overflow:hidden;position:relative}
+.chat-messages{flex:1;padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.chat-bubble{max-width:78%;padding:10px 14px;border-radius:12px;font-size:0.9rem;line-height:1.4;word-break:break-word;position:relative}
+.chat-bubble.incoming{background:var(--input-bg);border:1px solid var(--card-border);align-self:flex-start;border-bottom-left-radius:4px}
+.chat-bubble.outgoing{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-bubble .meta{font-size:0.7rem;opacity:0.75;margin-top:4px}
+.chat-bubble .sender{font-size:0.72rem;font-weight:700;color:#c084fc;margin-bottom:2px}
+.chat-input-bar{padding:10px;background:var(--input-bg);border-top:1px solid var(--card-border);display:flex;gap:8px}
+.chat-input{flex:1;background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;padding:8px 14px;color:var(--text-main);outline:none;font-size:0.9rem}
+.btn-send-chat{background:var(--accent-purple);color:#fff;border:none;padding:0 16px;border-radius:10px;font-weight:700;cursor:pointer;min-height:40px}
+.scroll-bottom-btn{position:absolute;right:16px;bottom:80px;background:var(--accent-purple);color:#fff;border:none;width:44px;height:44px;border-radius:50%;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:5}
+.scroll-bottom-btn.show{display:flex}
+.profile-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:20px;text-align:center;margin-bottom:14px}
+.profile-avatar-large{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;color:#fff;margin:0 auto 12px;position:relative;cursor:pointer;overflow:visible}
+.profile-avatar-large img{width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--input-bg);display:block}
+.avatar-edit-badge{position:absolute;bottom:0;right:0;width:26px;height:26px;border-radius:50%;background:var(--accent-purple);color:#fff;font-size:0.72rem;display:flex;align-items:center;justify-content:center;border:2px solid var(--card-bg);box-shadow:0 2px 8px rgba(0,0,0,0.4);pointer-events:none}
+.profile-email{font-size:0.85rem;color:var(--text-muted);background:var(--input-bg);border:1px solid var(--card-border);padding:6px 12px;border-radius:8px;display:inline-block;margin-top:8px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.profile-section-box{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:16px;margin-bottom:12px}
+.profile-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--card-border);font-size:0.9rem;cursor:pointer;gap:10px}
+.profile-row:last-child{border-bottom:none}
+.profile-row .label{display:flex;align-items:center;gap:10px}
+.profile-row .chev{color:var(--text-muted);font-size:0.75rem}
+.profile-row .row-badge{background:var(--accent-purple);color:#fff;font-size:0.68rem;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:auto;margin-right:8px}
+.profile-name-input{background:var(--input-bg);border:1px solid var(--card-border);border-radius:8px;color:var(--text-main);padding:8px 12px;text-align:center;width:100%;max-width:220px;font-size:0.95rem;margin-top:6px;outline:none}
+.profile-name-hint{font-size:0.72rem;color:var(--text-muted);margin-top:4px}
+.input{background:var(--input-bg);border:1px solid var(--card-border);border-radius:10px;padding:12px 14px;color:var(--text-main);width:100%;outline:none;font-size:0.92rem}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--card-border);cursor:pointer}
+.toggle-row:last-child{border-bottom:none}
+.switch{position:relative;width:44px;height:24px;background:var(--input-bg);border-radius:12px;border:1px solid var(--card-border);cursor:pointer;transition:background 0.2s;flex-shrink:0}
+.switch.on{background:var(--accent-purple);border-color:var(--accent-purple)}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform 0.2s}
+.switch.on::after{transform:translateX(20px)}
+.filters-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.filter-chip{background:var(--card-bg);border:1px solid var(--card-border);color:var(--text-muted);padding:8px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer;min-height:36px;display:inline-flex;align-items:center}
+.filter-chip.active{background:var(--accent-purple);color:#fff;border-color:var(--accent-purple)}
+select.filter-chip{color:var(--text-main)}
+.link-section-title{font-weight:700;font-size:0.95rem;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.link-section-desc{font-size:0.82rem;color:var(--text-muted);margin-bottom:14px;line-height:1.5}
+.google-btn{width:100%;max-width:320px;background:#fff;color:#1f1f1f;border:1px solid #dadce0;padding:12px 16px;border-radius:12px;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;font-family:inherit}
+.google-btn i{font-size:1.15rem;color:#4285F4}
+.divider-text{text-align:center;color:var(--text-muted);font-size:0.78rem;margin:12px 0;position:relative}
+.divider-text::before,.divider-text::after{content:'';position:absolute;top:50%;width:35%;height:1px;background:var(--card-border)}
+.divider-text::before{left:0}.divider-text::after{right:0}
+.linked-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.35);color:var(--success-green);padding:4px 10px;border-radius:8px;font-size:0.78rem;font-weight:700;margin-bottom:10px}
+.btn-plan-select{background:var(--accent-purple);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-weight:700;font-size:0.85rem;cursor:pointer;white-space:nowrap}
+.btn-plan-select:hover{background:var(--accent-hover)}
+
+/* ===== DOWNLOAD MANAGER ===== */
+.downloads-page .section-header{margin-top:0}
+.dl-summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.dl-summary .filter-chip{font-size:0.75rem}
+.download-list{display:flex;flex-direction:column;gap:10px}
+.download-item{background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:10px;display:flex;gap:12px;align-items:center;transition:border-color 0.2s}
+.download-item:hover{border-color:rgba(124,58,237,0.4)}
+.download-thumb{width:64px;height:88px;border-radius:8px;background-color:#0e0d15;background-size:cover;background-position:center;flex-shrink:0}
+.download-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.download-title{font-size:0.88rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.download-status{font-size:0.72rem;color:var(--text-muted);font-weight:600}
+.download-status.ok{color:var(--success-green)}
+.download-status.err{color:var(--danger-red)}
+.download-status.paused{color:var(--warning-gold)}
+.download-progress{width:100%;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;margin-top:2px}
+.download-progress-fill{height:100%;background:linear-gradient(90deg,#8b5cf6,#ec4899);border-radius:2px;transition:width 0.25s ease}
+.download-actions{display:flex;gap:6px;flex-shrink:0}
+.dl-btn{background:var(--input-bg);border:1px solid var(--card-border);color:var(--text-main);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.9rem;transition:all 0.2s}
+.dl-btn:hover{border-color:var(--accent-purple);color:var(--accent-pill);background:rgba(124,58,237,0.1)}
+.dl-btn.danger:hover{border-color:var(--danger-red);color:var(--danger-red);background:rgba(239,68,68,0.1)}
+.dl-empty{text-align:center;padding:60px 20px;color:var(--text-muted)}
+.dl-empty i{font-size:3rem;opacity:0.25;display:block;margin-bottom:16px}
+
+/* ===== SKELETON LOADERS ===== */
+.skeleton{background:linear-gradient(90deg, #191724 25%, #2a2739 37%, #191724 63%);background-size:200% 100%;animation:shimmer 1.6s infinite linear;border-radius:6px;}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.skeleton-card{min-width:120px;max-width:120px;flex-shrink:0;display:flex;flex-direction:column;gap:8px}
+.skeleton-poster{width:100%;height:160px;border-radius:10px}
+.skeleton-text-1{height:12px;width:80%;border-radius:4px}
+.skeleton-text-2{height:9px;width:50%;border-radius:4px}
+
+.hero-skeleton-wrapper{display:flex;align-items:center;gap:20px;padding:20px 16px;width:100%;max-width:1200px;margin:0 auto;min-height:260px;background:linear-gradient(135deg, #12111a, #0b0a10);border-radius:14px;}
+.hero-poster-skeleton{width:120px;height:180px;border-radius:8px;flex-shrink:0}
+.hero-text-skeleton{display:flex;flex-direction:column;gap:10px;flex:1;min-width:0}
+.hero-text-skeleton .line{height:16px;border-radius:4px}
+.hero-text-skeleton .line.title{height:26px;width:60%;margin-bottom:8px}
+.hero-text-skeleton .line.genre{height:14px;width:40%;margin-bottom:8px}
+.hero-text-skeleton .line.desc{height:12px;width:90%}
+.hero-text-skeleton .line.desc.short{width:70%}
+
+@media(max-width:600px){
+  .hero-skeleton-wrapper{min-height:200px;padding:14px 12px;gap:14px;border-radius:10px}
+  .hero-poster-skeleton{width:95px;height:140px}
+  .hero-text-skeleton .line.title{height:20px;width:70%}
+  .hero-text-skeleton .line.genre{height:12px;width:50%}
+  .hero-text-skeleton .line.desc{height:10px;width:95%}
+  .download-thumb{width:52px;height:72px}
+  .dl-btn{width:32px;height:32px;font-size:0.82rem}
+}
+
+@media(max-width:380px){
+  .nav-item{font-size:0.6rem}
+  .nav-item i{font-size:1.05rem}
+  .avatar-picker-grid{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- AUTH MODAL -->
+<div id="authModal" class="auth-modal">
+  <div class="auth-modal-card">
+    <button class="auth-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+    <div class="auth-logo"><i class="fa-solid fa-film"></i></div>
+    <h2 id="authTitle" class="auth-title">Sign in to KaziFlix</h2>
+    <p id="authSubtitle" class="auth-subtitle">Sign in to continue</p>
+    <button type="button" class="google-signin-btn" onclick="signInWithGoogle()"><i class="fa-brands fa-google"></i> Continue with Google</button>
+    <div class="auth-divider"><span>or</span></div>
+    <form id="authFormMain" onsubmit="handleAuthSubmit(event)" novalidate>
+      <input type="email" id="authEmail" class="auth-input" placeholder="Email" autocomplete="email" required />
+      <input type="password" id="authPassword" class="auth-input" placeholder="Password" autocomplete="current-password" required />
+      <div id="authError" class="auth-error"></div>
+      <button type="submit" class="auth-submit-btn" id="authSubmitBtn">Sign In</button>
+    </form>
+    <div class="auth-links">
+      <button type="button" class="auth-link" onclick="showForgotPassword()">Forgot password?</button>
+      <span class="auth-dot">·</span>
+      <button type="button" class="auth-link" id="authToggleMode" onclick="toggleAuthMode()">Create account</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE SETUP MODAL -->
+<div id="profileSetupModal" class="auth-modal">
+  <div class="auth-modal-card" style="max-width:480px">
+    <button class="auth-close" onclick="closeProfileSetup()"><i class="fa-solid fa-xmark"></i></button>
+    <div class="auth-logo"><i class="fa-solid fa-user-astronaut"></i></div>
+    <h2 class="auth-title">Set up your profile</h2>
+    <p class="auth-subtitle">Pick an avatar and choose a display name</p>
+    <div class="avatar-picker-section">
+      <div class="avatar-picker-header">
+        <span>Choose your avatar</span>
+        <button type="button" class="btn-shuffle" onclick="shuffleAvatars()"><i class="fa-solid fa-shuffle"></i> Shuffle</button>
+      </div>
+      <div class="avatar-picker-grid" id="avatarPickerGrid"></div>
+    </div>
+    <label class="pf-label" style="margin-top:16px">Display name</label>
+    <input type="text" id="setupNameInput" class="auth-input" placeholder="Your name" maxlength="24" autocomplete="name" />
+    <button type="button" class="auth-submit-btn" id="profileSetupSaveBtn" onclick="saveProfileSetup()" style="margin-top:6px">Save</button>
+    <div class="auth-links">
+      <button type="button" class="auth-link" onclick="closeProfileSetup()">Skip for now</button>
+    </div>
+  </div>
+</div>
+
+<!-- UPDATE MODAL -->
+<div class="modal-overlay" id="updateModalOverlay" onclick="closeUpdateModal(event)">
+  <div class="update-modal" onclick="event.stopPropagation()">
+    <div class="update-modal-header">
+      <div class="update-icon-wrapper"><i class="fa-solid fa-rocket"></i></div>
+      <div><div class="update-modal-title">New Update Available!</div><span style="font-size:0.78rem;color:var(--text-muted)">Upgrade for the best experience</span></div>
+    </div>
+    <div class="update-modal-body">
+      <span id="modalVersion" class="update-version-tag">v1.0.0</span>
+      <div id="modalDesc" class="update-modal-desc">Loading…</div>
+      <div class="update-link-box">
+        <input type="text" id="modalLinkInput" class="update-link-input" readonly />
+        <button class="btn-copy-update" onclick="copyUpdateLink()"><i class="fa-solid fa-copy"></i> Copy</button>
+      </div>
+      <div class="update-actions-row">
+        <button class="btn-dismiss-update" onclick="closeUpdateModal()">Later</button>
+        <a id="modalDownloadBtn" class="btn-download-update" href="#" target="_blank" rel="noopener"><i class="fa-solid fa-download"></i> Update Now</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAYWALL -->
+<div id="paywallOverlay">
+  <div class="pw-card">
+    <div class="pw-icon"><i class="fa-solid fa-crown"></i></div>
+    <div class="pw-title" id="pwTitle">Unlock KaziFlix</div>
+    <div class="pw-sub" id="pwSub">Choose a plan to continue streaming</div>
+    <div class="plan-list" id="planList"></div>
+    <div class="pw-notice">
+      <i class="fa-solid fa-circle-info"></i>
+      <strong>Payment may take 10 to 30 minutes for approval.</strong> Please do not make multiple payments while waiting. If it takes longer, call or WhatsApp me on <strong>0707340608</strong>.
+    </div>
+    <div style="text-align:center;margin-top:10px">
+      <button class="btn btn-ghost btn-sm" onclick="signOutUser()" style="font-size:0.78rem"><i class="fa-solid fa-right-from-bracket"></i> Switch account</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="homePage">
+  <div id="pendingBanner" class="pending-banner" onclick="switchNavTab('pending')">
+    <i class="fa-solid fa-hourglass-half"></i>
+    <div class="pb-text"><strong>Payment under review</strong>We'll activate your plan shortly. Tap to view status.</div>
+    <i class="fa-solid fa-chevron-right" style="color:var(--info-blue)"></i>
+  </div>
+  <div class="hero-container" id="heroContainer"></div>
+  <div id="recentlyWatchedSection"></div>
+  <div id="vjSection"></div>
+  <div id="homeSections"></div>
+</div>
+
+<!-- SEARCH -->
+<div id="searchPage" class="search-page">
+  <div class="search-page-header">
+    <div class="search-wrapper">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="searchInput" class="search-input" placeholder="Search Movies & Series…" autocomplete="off"/>
+      <button class="clear-search-btn" id="clearSearchBtn" style="display:none" onclick="clearSearchInput()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="searchSuggest" class="search-suggest"></div>
+  </div>
+  <div id="searchPageResults">
+    <div class="search-empty">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <p>Search for movies, TV shows, genres or VJs</p>
+    </div>
+  </div>
+</div>
+
+<!-- MY LIST -->
+<div id="mylistPage" class="mylist-page">
+  <div class="section-header" style="margin-top:0"><div class="section-title"><div class="title-pill"></div><span>My List</span></div></div>
+  <div id="mylistGrid" class="category-grid"></div>
+</div>
+
+<!-- CHAT -->
+<div id="chatPage" class="chat-page">
+  <div class="section-header" style="margin-top:0"><div class="section-title"><div class="title-pill"></div><span>Community Chat</span></div></div>
+  <div class="chat-container">
+    <div id="chatMessages" class="chat-messages"><div class="chat-bubble incoming">Welcome to KaziFlix Chat!</div></div>
+    <button class="scroll-bottom-btn" id="chatScrollBtn" onclick="scrollChatBottom(true)"><i class="fa-solid fa-arrow-down"></i></button>
+    <form class="chat-input-bar" onsubmit="handleChatSubmit(event)">
+      <input type="text" id="chatInput" class="chat-input" placeholder="Type a message…" maxlength="500" required/>
+      <button type="submit" class="btn-send-chat"><i class="fa-solid fa-paper-plane"></i></button>
+    </form>
+  </div>
+</div>
+
+<!-- PLANS -->
+<div id="plansPage" class="plans-page">
+  <div class="back-nav" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i><span>Back</span></div>
+  <div class="pw-card" style="margin-top:0">
+    <div class="pw-icon"><i class="fa-solid fa-crown"></i></div>
+    <div class="pw-title">Choose Your Plan</div>
+    <div class="pw-sub" id="plansPageSub">Upgrade to unlock all content</div>
+    <div class="plan-list" id="plansPageList"></div>
+  </div>
+</div>
+
+<!-- PAYMENT -->
+<div id="paymentPage" class="payment-page">
+  <div class="back-nav" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i><span>Back to plans</span></div>
+  <div class="pw-card" style="margin-top:0">
+    <div class="pw-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+    <div class="pw-title">Complete Payment</div>
+    <div class="pw-sub">Send the exact amount via Mobile Money, then submit the form below.</div>
+    <div class="pay-details">
+      <div style="font-weight:700;margin-bottom:10px;font-size:0.95rem"><i class="fa-solid fa-arrow-right-to-bracket" style="color:var(--accent-pill)"></i> Send payment to:</div>
+      <div class="row"><span class="lbl">Network</span><span class="val">Airtel Money / Mobile Money</span></div>
+      <div class="row"><span class="lbl">Phone Number</span><span class="val copy" onclick="copyText('0707340608')">0707340608 <i class="fa-solid fa-copy" style="font-size:0.75rem"></i></span></div>
+      <div class="row"><span class="lbl">Registered Name</span><span class="val">Laila</span></div>
+      <div class="row"><span class="lbl">Plan</span><span class="val" id="pfPlanName">—</span></div>
+      <div class="row"><span class="lbl">Amount</span><span class="val" style="color:var(--success-green)">UGX <span id="pfAmount">0</span></span></div>
+    </div>
+    <div class="pw-notice">
+      <i class="fa-solid fa-circle-info"></i>
+      Payment may take 10 to 30 minutes for approval. Please do not make multiple payments while waiting. If it takes longer, call or WhatsApp me on <strong>0707340608</strong>.
+    </div>
+    <form id="paymentForm" onsubmit="submitPayment(event)">
+      <label class="pf-label">Your name (the name that appears on the payment)</label>
+      <input type="text" id="pfSenderName" class="pf-input" placeholder="e.g. John Doe" required />
+      <label class="pf-label">Phone number you paid from</label>
+      <input type="tel" id="pfPhone" class="pf-input" placeholder="e.g. 0700123456" required />
+      <label class="pf-label">Transaction ID / SMS Code</label>
+      <input type="text" id="pfTxn" class="pf-input" placeholder="e.g. MP240123.1234.A12345" required />
+      <button type="submit" class="btn" style="width:100%;padding:14px;font-size:1rem" id="pfSubmitBtn"><i class="fa-solid fa-paper-plane"></i> Submit Payment</button>
+    </form>
+  </div>
+</div>
+
+<!-- PENDING -->
+<div id="pendingPage" class="pending-page">
+  <div class="back-nav" onclick="switchNavTab('home')"><i class="fa-solid fa-arrow-left"></i><span>Back to home</span></div>
+  <div class="pw-card" style="margin-top:0;text-align:center">
+    <div class="pending-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+    <div class="pw-title">Payment Under Review</div>
+    <div class="pw-sub">Your payment has been submitted successfully. Our team will verify it and activate your plan shortly.</div>
+    <div class="pay-details" style="text-align:left">
+      <div class="row"><span class="lbl">Plan</span><span class="val" id="pendingPlan">—</span></div>
+      <div class="row"><span class="lbl">Amount</span><span class="val" style="color:var(--success-green)">UGX <span id="pendingAmount">0</span></span></div>
+      <div class="row"><span class="lbl">Transaction ID</span><span class="val" id="pendingTxn" style="font-family:monospace;font-size:0.85rem">—</span></div>
+      <div class="row"><span class="lbl">Submitted</span><span class="val" id="pendingDate" style="font-size:0.85rem">—</span></div>
+    </div>
+    <div class="pw-notice" style="text-align:left">
+      <i class="fa-solid fa-circle-info"></i>
+      Payment may take 10 to 30 minutes for approval. Please do not make multiple payments while waiting. If it takes longer, call or WhatsApp me on <strong>0707340608</strong>.
+    </div>
+    <div class="btn-container">
+      <a class="btn" style="text-decoration:none" href="https://wa.me/256707340608" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp Us</a>
+      <a class="btn btn-ghost" style="text-decoration:none" href="tel:0707340608"><i class="fa-solid fa-phone"></i> Call</a>
+    </div>
+  </div>
+</div>
+
+<!-- DOWNLOADS -->
+<div id="downloadsPage" class="downloads-page">
+  <div class="back-nav" onclick="switchNavTab('profile')"><i class="fa-solid fa-arrow-left"></i><span>Back to profile</span></div>
+  <div class="section-header" style="margin-top:0">
+    <div class="section-title"><div class="title-pill"></div><span>Downloads</span></div>
+    <button class="btn btn-ghost btn-sm" onclick="downloadManager.clearCompleted()" id="dlClearBtn" style="display:none"><i class="fa-solid fa-broom"></i> Clear done</button>
+  </div>
+  <div class="dl-summary" id="dlSummary" style="display:none">
+    <div class="filter-chip active" data-dl-filter="all">All</div>
+    <div class="filter-chip" data-dl-filter="downloading">Downloading</div>
+    <div class="filter-chip" data-dl-filter="paused">Paused</div>
+    <div class="filter-chip" data-dl-filter="completed">Completed</div>
+  </div>
+  <div id="downloadManagerList" class="download-list">
+    <div class="dl-empty"><i class="fa-solid fa-download"></i><p>No downloads yet.</p><p style="font-size:0.8rem;margin-top:6px;opacity:0.7">Tap the download button on any title to save it here.</p></div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div id="profilePage" class="profile-page">
+  <div class="section-header" style="margin-top:0"><div class="section-title"><div class="title-pill"></div><span>Profile</span></div></div>
+  <div id="guestProfileCard" class="guest-prompt" style="display:none">
+    <i class="fa-solid fa-user-circle"></i>
+    <h3>You're browsing as a guest</h3>
+    <p>Sign in to save your likes and watch progress across all your devices.</p>
+    <button class="btn" onclick="openAuthModal('save your progress', () => {})"><i class="fa-solid fa-right-to-bracket"></i> Sign In / Create Account</button>
+  </div>
+  <div id="userProfileCard" style="display:none">
+    <div class="profile-card">
+      <div class="profile-avatar-large" id="profileAvatarWrap" onclick="openProfileSetup()" title="Tap to change avatar">
+        <img id="profileAvatarImg" src="" alt="" style="display:none" />
+        <span id="profileInitial">U</span>
+        <div class="avatar-edit-badge"><i class="fa-solid fa-pen"></i></div>
+      </div>
+      <input type="text" id="profileNameInput" class="profile-name-input" placeholder="Your display name" maxlength="24"/>
+      <div class="profile-name-hint">Tap avatar to change • name is visible in chat</div>
+      <div class="profile-email" id="profileEmailDisplay">—</div>
+      <div id="profileSubBadge"></div>
+    </div>
+    <div class="profile-section-box">
+      <div style="font-weight:700;font-size:0.95rem;margin-bottom:10px"><i class="fa-solid fa-chart-pie"></i> App Stats</div>
+      <div class="profile-row" style="cursor:default"><span style="color:var(--text-muted)">Recently Watched</span><strong id="profileWatchedCount">0</strong></div>
+      <div class="profile-row" style="cursor:default"><span style="color:var(--text-muted)">Liked Titles</span><strong id="profileLikesCount">0</strong></div>
+    </div>
+  </div>
+  <div class="profile-section-box">
+    <div class="profile-row" onclick="switchNavTab('downloads')">
+      <span class="label"><i class="fa-solid fa-download" style="color:var(--info-blue)"></i> Downloads</span>
+      <span class="row-badge" id="downloadsBadge" style="display:none">0</span>
+      <span class="chev"><i class="fa-solid fa-chevron-right"></i></span>
+    </div>
+    <div class="profile-row" onclick="switchNavTab('plans')"><span class="label"><i class="fa-solid fa-crown" style="color:var(--warning-gold)"></i> Subscription</span><span class="chev"><i class="fa-solid fa-chevron-right"></i></span></div>
+    <div class="profile-row" onclick="switchNavTab('settings')"><span class="label"><i class="fa-solid fa-gear"></i> Settings</span><span class="chev"><i class="fa-solid fa-chevron-right"></i></span></div>
+    <div class="profile-row" onclick="switchNavTab('about')"><span class="label"><i class="fa-solid fa-circle-info"></i> About</span><span class="chev"><i class="fa-solid fa-chevron-right"></i></span></div>
+    <div class="profile-row" onclick="clearLocalData()"><span class="label"><i class="fa-solid fa-broom"></i> Clear local cache</span><span class="chev"><i class="fa-solid fa-chevron-right"></i></span></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settingsPage" class="settings-page">
+  <div class="section-header" style="margin-top:0"><div class="section-title"><div class="title-pill"></div><span>Settings</span></div></div>
+  <div class="profile-section-box">
+    <div class="toggle-row" onclick="toggleSetting('autoplay',this)"><span>Autoplay next episode</span><div class="switch" id="swAutoplay"></div></div>
+    <div class="toggle-row" onclick="toggleSetting('dataSaver',this)"><span>Data saver (stream at lowest quality)</span><div class="switch" id="swDataSaver"></div></div>
+    <div class="toggle-row" onclick="toggleSetting('reducedMotion',this)"><span>Reduced motion</span><div class="switch" id="swReducedMotion"></div></div>
+    <div class="toggle-row" onclick="toggleSetting('notifications',this)"><span>Download notifications</span><div class="switch" id="swNotifications"></div></div>
+    <div class="toggle-row" onclick="toggleSetting('movieNotifications',this)"><span>New movie notifications</span><div class="switch" id="swMovieNotifications"></div></div>
+  </div>
+  <div class="profile-section-box">
+    <div style="font-weight:700;font-size:0.95rem;margin-bottom:10px">Default playback quality</div>
+    <select id="settingQuality" class="input">
+      <option value="auto">Auto (recommended)</option>
+      <option value="1080">1080p · ~1.4 GB/hr</option>
+      <option value="720">720p · ~700 MB/hr</option>
+      <option value="480">480p · ~350 MB/hr</option>
+      <option value="360">360p · ~250 MB/hr</option>
+      <option value="240">240p · ~180 MB/hr (saves most data)</option>
+    </select>
+  </div>
+  <div class="profile-section-box" id="linkAccountSection" style="display:none">
+    <div class="link-section-title"><i class="fa-solid fa-user-plus"></i> Sign in</div>
+    <p class="link-section-desc">Sign in to keep your likes and watch progress on every device.</p>
+    <button class="google-btn" onclick="signInWithGoogle()"><i class="fa-brands fa-google"></i> Continue with Google</button>
+    <div class="divider-text">OR</div>
+    <button class="btn-action-secondary" style="width:100%;max-width:320px" onclick="openAuthModal('sign in', () => {})"><i class="fa-solid fa-envelope"></i> Sign in with email</button>
+  </div>
+  <div class="profile-section-box" id="linkedAccountSection" style="display:none">
+    <div class="link-section-title"><i class="fa-solid fa-circle-check" style="color:var(--success-green)"></i> Signed in</div>
+    <div class="linked-badge"><i class="fa-solid fa-shield-halved"></i> Progress synced</div>
+    <p class="link-section-desc">Your likes and watch history are backed up to your account.</p>
+    <button class="btn-action-secondary" style="max-width:240px;margin-bottom:10px" onclick="openProfileSetup()"><i class="fa-solid fa-user-pen"></i> Edit profile</button>
+    <button class="btn-action-secondary" style="max-width:240px" onclick="signOutUser()"><i class="fa-solid fa-right-from-bracket"></i> Sign out</button>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div id="aboutPage" class="about-page">
+  <div class="section-header" style="margin-top:0"><div class="section-title"><div class="title-pill"></div><span>About KaziFlix</span></div></div>
+  <div class="profile-section-box">
+    <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.6">KaziFlix lets you stream movies and TV shows on any device.</p>
+    <div class="profile-row" style="cursor:default;margin-top:10px"><span>Version</span><strong id="aboutInstalledVersion">1.0.0</strong></div>
+    <div class="profile-row" style="cursor:default"><span>Available update</span><strong id="aboutAvailableVersion">—</strong></div>
+    <div class="profile-row" style="cursor:default"><span>UID</span><strong id="aboutUid" style="font-family:monospace;font-size:0.8rem">—</strong></div>
+  </div>
+</div>
+
+<!-- CATEGORY -->
+<div id="categoryView" class="category-view">
+  <div class="back-nav" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i><span id="categoryPageTitle">Category</span></div>
+  <div class="filters-bar" id="categoryFilters"></div>
+  <div id="categoryGrid" class="category-grid"></div>
+  <div id="categorySentinel" style="grid-column:1/-1;text-align:center;padding:20px;display:none"></div>
+</div>
+
+<!-- DETAILS -->
+<div id="detailsPage" class="details-page">
+  <div class="details-header-immersive" id="backdropContainer">
+    <div class="details-top-actions">
+      <button class="icon-btn-round" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i></button>
+      <div class="details-top-right-group">
+        <button class="icon-btn-round" id="likeBtn" onclick="toggleLike()"><i id="likeIcon" class="fa-regular fa-bookmark"></i></button>
+        <button class="icon-btn-round" onclick="shareMovie()"><i class="fa-solid fa-share-nodes"></i></button>
+        <button class="icon-btn-round" onclick="handleDownloadClick(event)"><i class="fa-solid fa-download"></i></button>
+        <button class="icon-btn-round" onclick="reportContent()"><i class="fa-solid fa-flag"></i></button>
+      </div>
+    </div>
+    <img id="detailBackdrop" class="details-backdrop-img" src="" alt="" />
+    <div class="details-overlay-gradient">
+      <h1 id="detailTitle" class="details-title-row">TITLE</h1>
+      <div class="details-sub-meta">
+        <span id="detailVJ" class="vj-tag-pill">VJ</span>
+        <span id="detailGenre">Genre</span>
+        <span id="detailYear"></span>
+        <span id="detailRating"></span>
+      </div>
+    </div>
+
+    <div id="playerContainer" class="video-player-container">
+      <button class="player-close-btn" id="playerCloseBtn" onclick="closePlayer()" title="Close player"><i class="fa-solid fa-arrow-left"></i></button>
+      <div id="videoLoader" class="video-loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Loading Stream...</span>
+      </div>
+      <video id="html5VideoPlayer" controls playsinline preload="metadata" referrerpolicy="no-referrer" style="display: none;"></video>
+      <iframe id="embedVideoPlayer" allowfullscreen referrerpolicy="no-referrer" style="display: none;"></iframe>
+    </div>
+  </div>
+
+  <div class="details-body-section">
+    <div class="details-actions-row" style="margin-top:12px">
+      <button class="btn-action-primary" onclick="handleWatchNow()"><i class="fa-solid fa-play"></i> Watch Now</button>
+      <button class="btn-action-secondary" id="nextEpBtn" onclick="playNextEpisode()" style="display:none"><i class="fa-solid fa-forward"></i> Next Episode</button>
+      <a class="btn-action-secondary" href="#" onclick="handleDownloadClick(event)"><i class="fa-solid fa-download"></i> <span id="downloadSizeLabel">Download</span></a>
+    </div>
+    <p id="detailDesc" class="details-desc-text"></p>
+    <div id="subtitlesSection" style="display:none;margin-bottom:14px"><div class="tmdb-section-title" style="font-size:1rem">Subtitles</div><div id="subtitlesList" class="filters-bar"></div></div>
+    <div id="seasonsSectionContainer" class="season-selector-card" style="display:none">
+      <div class="season-header-row" onclick="toggleSeasonsDropdown()"><div class="season-header-title">Select Season</div><i id="seasonChevronIcon" class="fa-solid fa-chevron-down"></i></div>
+      <div id="seasonsScrollRow" class="season-row-scroll"></div>
+    </div>
+    <div id="episodesSection" style="display:none;margin-top:14px;margin-bottom:16px"><div id="episodesGrid" class="episodes-horizontal-row"></div></div>
+    <div id="tmdbCastSection" style="display:none"><div id="tmdbCastTitle" class="tmdb-section-title">Cast</div><div id="tmdbCastRow" class="cast-horizontal-row"></div></div>
+    <div id="tmdbSimilarSection" style="display:none"><div class="tmdb-section-title">Similar Titles</div><div id="tmdbSimilarRow" class="movies-row"></div></div>
+    <div id="tmdbTrailersSection" style="display:none"><div class="tmdb-section-title">Trailers</div><div id="tmdbTrailersRow" class="trailers-horizontal-row"></div></div>
+  </div>
+</div>
+
+<div id="detailsLoading" class="details-loading"><div class="spinner"></div><span style="color:var(--text-muted);font-size:0.9rem">Loading title…</span></div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-item active" id="navHomeBtn" onclick="switchNavTab('home')"><i class="fa-solid fa-house"></i><span>Home</span></button>
+  <button class="nav-item" id="navSearchBtn" onclick="switchNavTab('search')"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></button>
+  <button class="nav-item" id="navChatBtn" onclick="switchNavTab('chat')"><i class="fa-solid fa-comments"></i><span>Chat</span><span class="nav-badge hidden" id="chatUnreadBadge">0</span></button>
+  <button class="nav-item" id="navMylistBtn" onclick="switchNavTab('mylist')"><i class="fa-solid fa-bookmark"></i><span>My List</span></button>
+  <button class="nav-item" id="navProfileBtn" onclick="switchNavTab('profile')"><i class="fa-solid fa-user"></i><span>Profile</span></button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import {
+  getAuth, onAuthStateChanged, signOut, updateProfile,
+  GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult,
+  createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import {
+  getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc,
+  query, orderBy, limit, startAfter, onSnapshot, increment, addDoc, serverTimestamp, where
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const APP_VERSION = "2.5.0";
+const firebaseConfig = {
+  apiKey: "AIzaSyBi5HpJk44IZ--1cEyFmtzzIyqXr1RA2tM",
+  authDomain: "movie-stream-app-47208.firebaseapp.com",
+  projectId: "movie-stream-app-47208",
+  storageBucket: "movie-stream-app-47208.firebasestorage.app",
+  messagingSenderId: "686067092261",
+  appId: "1:686067092261:web:f0a44cb0a399148be8a8cc",
+  measurementId: "G-WJTDKVDM3V"
+};
+const TMDB_API_KEY = "606244727cc3260bba3eda2c1f123004";
+
+const PLANS = {
+  free: { id: 'free', name: 'Free Trial', days: 2, price: 0, currency: 'UGX', label: 'Free' },
+  daily: { id: 'daily', name: 'Daily', days: 1, price: 500, currency: 'UGX', label: '1 Day' },
+  '3day': { id: '3day', name: '3-Day', days: 3, price: 1500, currency: 'UGX', label: '3 Days' },
+  weekly: { id: 'weekly', name: 'Weekly', days: 7, price: 3500, currency: 'UGX', label: '7 Days' },
+  '2week': { id: '2week', name: '2-Week', days: 14, price: 7000, currency: 'UGX', label: '14 Days' }
+};
+const AVATAR_STYLES = ['adventurer','avataaars','big-ears','bottts','croodles','fun-emoji','micah','miniavs','open-peeps','personas','pixel-art','thumbs'];
+const AVATAR_BG_COLORS = 'b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf,c7f9cc,fce4c9';
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl = (u) => { if (!u) return ''; try { const p = new URL(u, location.href); return ['http:','https:'].includes(p.protocol) ? p.href : ''; } catch { return ''; } };
+const lsGet = (k, def) => { try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+const lsDel = (k) => { try { localStorage.removeItem(k); } catch {} };
+
+function tsToMs(ts) {
+  if (!ts) return 0;
+  if (ts.toMillis) return ts.toMillis();
+  if (ts.toDate) return ts.toDate().getTime();
+  if (typeof ts === 'number') return ts;
+  if (typeof ts === 'string') { const d = new Date(ts); return isNaN(d) ? 0 : d.getTime(); }
+  return 0;
+}
+function formatTime(seconds) {
+  if (!seconds || isNaN(seconds) || seconds < 0) return "0:00";
+  const h = Math.floor(seconds / 3600), m = Math.floor((seconds % 3600) / 60), s = Math.floor(seconds % 60);
+  if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+function timeAgo(ts) {
+  const d = ts?.toDate ? ts.toDate() : (ts?.toMillis ? new Date(ts.toMillis()) : null);
+  if (!d) return '';
+  const diff = (Date.now() - d.getTime()) / 1000;
+  if (diff < 60) return 'now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h';
+  return Math.floor(diff/86400) + 'd';
+}
+function formatCountdown(expiryMs) {
+  const diff = expiryMs - Date.now();
+  if (diff <= 0) return 'Expired';
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins = Math.floor((diff % 3600000) / 60000);
+  if (days > 0) return `${days}d ${hours}h`;
+  if (hours > 0) return `${hours}h ${mins}m`;
+  return `${mins}m`;
+}
+function formatBytes(bytes) {
+  if (!bytes || bytes <= 0) return '—';
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  let i = 0, n = bytes;
+  while (n >= 1024 && i < units.length - 1) { n /= 1024; i++; }
+  return `${(n >= 100 || i === 0) ? Math.round(n) : n.toFixed(1)} ${units[i]}`;
+}
+function computeUserStatus(userData) {
+  if (!userData) return 'guest';
+  const now = Date.now();
+  const status = userData.subscriptionStatus;
+  if (status === 'pending_approval') return 'pending_approval';
+  if (status === 'inactive') return 'inactive';
+  if (status === 'active' || userData.isVip) {
+    const exp = tsToMs(userData.subscriptionExpiry);
+    if (exp > now) return 'active';
+    return 'expired';
+  }
+  const trial = tsToMs(userData.trialExpiry);
+  if (trial > now) return 'free_trial';
+  return 'expired';
+}
+function getUserExpiry(userData) {
+  if (!userData) return 0;
+  const status = userData.subscriptionStatus || '';
+  if (status === 'active' || userData.isVip) {
+    const vip = tsToMs(userData.subscriptionExpiry);
+    if (vip) return vip;
+  }
+  const trial = tsToMs(userData.trialExpiry);
+  return trial;
+}
+
+function getLatestProgress(movieId) {
+  if (movieProgress[movieId]) return { key: movieId, data: movieProgress[movieId] };
+  const epKeys = Object.keys(movieProgress).filter(k => k.startsWith(movieId + '_'));
+  if (!epKeys.length) return null;
+  let best = null;
+  for (const k of epKeys) {
+    const d = movieProgress[k];
+    if (!d) continue;
+    if (!best || (d.updatedAt || 0) > (best.data.updatedAt || 0)) best = { key: k, data: d };
+  }
+  return best;
+}
+function getProgressPct(prog) {
+  if (!prog || !prog.duration || !prog.currentTime) return 0;
+  return Math.max(0, Math.min(100, (prog.currentTime / prog.duration) * 100));
+}
+function formatEpisodeLabel(key) {
+  const m = key.match(/_s_(\d+)_ep_(\d+)/);
+  if (m) return `S${+m[1]+1} · E${+m[2]+1}`;
+  const ep = key.match(/_ep_(\d+)/);
+  if (ep) return `E${+ep[1]+1}`;
+  return null;
+}
+
+window.showToast = (msg, icon = "fa-circle-info", duration = 3000) => {
+  const container = document.getElementById("toastContainer");
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerHTML = `<i class="fa-solid ${esc(icon)}"></i> <span>${esc(msg)}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), duration);
+};
+window.copyText = async (text) => {
+  try { await navigator.clipboard.writeText(text); showToast("Copied: " + text, "fa-copy"); }
+  catch { showToast("Copy failed", "fa-circle-exclamation"); }
+};
+
+/* ==================================================================
+   ============== NOTIFICATION HELPERS ==============================
+   ================================================================== */
+
+const KZ_NOTIF_ICON = 'data:image/svg+xml,' + encodeURIComponent(
+  "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>" +
+  "<rect width='64' height='64' rx='14' fill='%237c3aed'/>" +
+  "<text x='32' y='44' font-size='36' text-anchor='middle' fill='white'>🎬</text>" +
+  "</svg>"
+);
+
+function notificationsSupported() { return typeof window !== 'undefined' && 'Notification' in window; }
+function notificationsEnabled() { return notificationsSupported() && Notification.permission === 'granted'; }
+
+async function requestNotificationPermission() {
+  if (!notificationsSupported()) return false;
+  if (Notification.permission === 'granted') return true;
+  if (Notification.permission === 'denied') return false;
+  try {
+    const perm = await Notification.requestPermission();
+    return perm === 'granted';
+  } catch { return false; }
+}
+
+/* Show a notification. Tries the SW registration first (better
+   for background/tab-out), falls back to the plain Notification API. */
+function showNotification(title, options = {}) {
+  if (!notificationsEnabled()) return null;
+  const opts = Object.assign({
+    icon: KZ_NOTIF_ICON,
+    badge: KZ_NOTIF_ICON,
+    silent: true,
+    tag: 'kz-generic'
+  }, options);
+  try {
+    // Try service worker (survives tab switch and keeps updating same tag)
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.ready
+        .then(reg => { try { reg.showNotification(title, opts); } catch {} })
+        .catch(() => {});
+      return null;
+    }
+  } catch {}
+  try {
+    return new Notification(title, opts);
+  } catch {
+    return null;
+  }
+}
+
+/* Register a minimal inline service worker so notifications can
+   be shown even when the tab is in the background. */
+(function registerKZServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+  const swCode = `
+    self.addEventListener('install', () => self.skipWaiting());
+    self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+    self.addEventListener('notificationclick', event => {
+      event.notification.close();
+      const data = event.notification.data || {};
+      event.waitUntil(
+        self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+          for (const c of list) {
+            if ('focus' in c) {
+              c.postMessage({ type: 'kz-notification-click', data });
+              return c.focus();
+            }
+          }
+          if (self.clients.openWindow) return self.clients.openWindow('/');
+        })
+      );
+    });
+  `;
+  try {
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const url = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(url, { scope: './' }).catch(() => {});
+  } catch {}
+})();
+
+/* ==================================================================
+   ============== DOWNLOAD MANAGER ==================================
+   ================================================================== */
+
+/* Files larger than this fall back to a silent-iframe download so that
+   mobile browsers don't run out of memory. */
+const MAX_BLOB_DOWNLOAD = 400 * 1024 * 1024; // 400 MB
+const MAX_DL_RETRIES = 5;
+
+const fileSizeCache = new Map();  // url -> bytes (0 = unknown)
+let downloadSizeToken = 0;
+
+const isEmbedUrl = (u) => /youtube\.com|youtu\.be|drive\.google\.com|vimeo\.com/i.test(u || '');
+
+function getCurrentDownloadUrl() {
+  let url = activeVideoUrl;
+  if (isTrailerPlaying || !url || isEmbedUrl(url)) {
+    if (activeMovie && activeMovie.videoUrl) url = activeMovie.videoUrl;
+  }
+  return url || '';
+}
+
+function getCurrentFileSizeFallback() {
+  if (!activeMovie) return '';
+  if (activeEpisodeKey) {
+    const idxM = activeEpisodeKey.match(/ep_(\d+)/);
+    const idx = idxM ? +idxM[1] : 0;
+    const sM = activeEpisodeKey.match(/^s_(\d+)_/);
+    if (sM && activeMovie.seasons?.[+sM[1]]) {
+      const ep = activeMovie.seasons[+sM[1]].episodes?.[idx];
+      if (ep && ep.fileSize) return ep.fileSize;
+    }
+    if (activeMovie.episodes?.[idx] && activeMovie.episodes[idx].fileSize) return activeMovie.episodes[idx].fileSize;
+  }
+  return activeMovie.fileSize || '';
+}
+
+async function fetchRemoteFileSize(url) {
+  if (!url || !/^https?:/i.test(url) || isEmbedUrl(url) || url.includes('.m3u8')) return 0;
+  try {
+    const res = await fetch(url, { method: 'HEAD', mode: 'cors', cache: 'no-store' });
+    if (res.ok) {
+      const len = res.headers.get('content-length');
+      if (len) { const n = parseInt(len, 10); if (n > 0) return n; }
+      const cr = res.headers.get('content-range');
+      if (cr) { const m = cr.match(/\/(\d+)\s*$/); if (m) return parseInt(m[1], 10); }
+    }
+  } catch (e) {}
+  try {
+    const res = await fetch(url, { method: 'GET', headers: { 'Range': 'bytes=0-0' }, mode: 'cors', cache: 'no-store' });
+    const cr = res.headers.get('content-range');
+    if (cr) { const m = cr.match(/\/(\d+)\s*$/); if (m) { try { res.body?.cancel(); } catch {} return parseInt(m[1], 10); } }
+    const len = res.headers.get('content-length');
+    if (len) { const n = parseInt(len, 10); if (n > 0) { try { res.body?.cancel(); } catch {} return n; } }
+    try { res.body?.cancel(); } catch {}
+  } catch (e) {}
+  return 0;
+}
+
+async function refreshDownloadLabel() {
+  const label = document.getElementById('downloadSizeLabel');
+  if (!label) return;
+  const url = getCurrentDownloadUrl();
+  const fallback = getCurrentFileSizeFallback();
+  label.textContent = fallback ? `Download · ${fallback}` : 'Download';
+  if (!url) return;
+  const token = ++downloadSizeToken;
+  let size = fileSizeCache.get(url);
+  if (size === undefined) {
+    size = await fetchRemoteFileSize(url);
+    fileSizeCache.set(url, size);
+  }
+  if (token !== downloadSizeToken) return;
+  if (getCurrentDownloadUrl() !== url) return;
+  if (size > 0) label.textContent = `Download · ${formatBytes(size)}`;
+  else if (fallback) label.textContent = `Download · ${fallback}`;
+}
+
+function saveBlobAs(blob, filename) {
+  const blobUrl = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = blobUrl;
+  a.download = filename;
+  a.rel = 'noopener';
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => { try { URL.revokeObjectURL(blobUrl); } catch {} }, 120000);
+}
+
+function silentIframeDownload(url) {
+  try {
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.setAttribute('aria-hidden', 'true');
+    iframe.src = url;
+    document.body.appendChild(iframe);
+    setTimeout(() => { try { iframe.remove(); } catch {} }, 180000);
+    return true;
+  } catch (e) { return false; }
+}
+
+/* ============ The actual Download Manager ============ */
+const downloadManager = {
+  downloads: new Map(),
+  counter: 0,
+  _lastNotifyAt: 0,
+  _filter: 'all',
+
+  create(options) {
+    const id = 'dl_' + Date.now().toString(36) + '_' + (++this.counter);
+    const dl = {
+      id,
+      url: options.url,
+      filename: options.filename,
+      title: options.title || options.filename,
+      poster: options.poster || '',
+      size: options.size || 0,
+      downloaded: 0,
+      status: 'pending',
+      chunks: [],
+      abortController: null,
+      retries: 0,
+      error: null,
+      createdAt: Date.now(),
+      completedAt: null
+    };
+    this.downloads.set(id, dl);
+    this.render();
+    this.updateBadge();
+    this.start(id);
+    return id;
+  },
+
+  get(id) { return this.downloads.get(id); },
+
+  async start(id) {
+    const dl = this.downloads.get(id);
+    if (!dl || dl.status === 'completed' || dl.status === 'cancelled') return;
+    dl.status = 'downloading';
+    dl.error = null;
+    dl.abortController = new AbortController();
+    this.render();
+
+    const startByte = dl.downloaded;
+    const headers = {};
+    if (startByte > 0) headers['Range'] = `bytes=${startByte}-`;
+
+    try {
+      const res = await fetch(dl.url, {
+        signal: dl.abortController.signal,
+        headers,
+        cache: 'no-store'
+      });
+      if (!res.ok && res.status !== 206) throw new Error('HTTP ' + res.status);
+
+      if (res.status === 206) {
+        const cr = res.headers.get('content-range');
+        if (cr) {
+          const m = cr.match(/\/(\d+)\s*$/);
+          if (m) dl.size = parseInt(m[1], 10);
+        }
+      } else {
+        const cl = res.headers.get('content-length');
+        if (cl && !dl.size) dl.size = parseInt(cl, 10);
+      }
+
+      if (!res.body) throw new Error('No stream body');
+
+      const reader = res.body.getReader();
+      while (true) {
+        if (dl.status !== 'downloading') break;
+        const { done, value } = await reader.read();
+        if (done) break;
+        if (value && value.length) {
+          dl.chunks.push(value);
+          dl.downloaded += value.length;
+          this.render();
+          this.throttledNotifyProgress(dl);
+        }
+      }
+
+      if (dl.status === 'paused') return;
+      if (dl.status === 'cancelled') return;
+
+      // Complete!
+      const blob = new Blob(dl.chunks, { type: res.headers.get('content-type') || 'video/mp4' });
+      dl.chunks = [];
+      saveBlobAs(blob, dl.filename);
+      dl.status = 'completed';
+      dl.completedAt = Date.now();
+      this.render();
+      this.updateBadge();
+      this.notifyComplete(dl);
+      showToast(`Downloaded: ${dl.title}`, 'fa-circle-check', 4000);
+
+      // Auto-cleanup after 5 minutes
+      setTimeout(() => {
+        const current = this.downloads.get(id);
+        if (current && current.status === 'completed') {
+          this.remove(id);
+        }
+      }, 5 * 60 * 1000);
+
+    } catch (e) {
+      if (e.name === 'AbortError' || dl.status === 'paused' || dl.status === 'cancelled') return;
+      dl.error = e.message || 'Network error';
+      if (dl.retries < MAX_DL_RETRIES) {
+        dl.retries++;
+        const delay = Math.min(30000, 1500 * Math.pow(2, dl.retries - 1));
+        this.render();
+        setTimeout(() => {
+          const current = this.downloads.get(id);
+          if (current && current.status === 'downloading') this.start(id);
+        }, delay);
+      } else {
+        dl.status = 'failed';
+        this.render();
+        this.updateBadge();
+        showToast(`Download failed: ${dl.title}`, 'fa-circle-exclamation', 4000);
+      }
+    }
+  },
+
+  pause(id) {
+    const dl = this.downloads.get(id);
+    if (!dl || dl.status !== 'downloading') return;
+    dl.status = 'paused';
+    try { dl.abortController?.abort(); } catch {}
+    this.render();
+    this.updateBadge();
+    showToast(`Paused: ${dl.title}`, 'fa-pause');
+  },
+
+  resume(id) {
+    const dl = this.downloads.get(id);
+    if (!dl || (dl.status !== 'paused' && dl.status !== 'failed')) return;
+    dl.retries = 0;
+    dl.status = 'downloading';
+    this.render();
+    this.updateBadge();
+    this.start(id);
+  },
+
+  cancel(id) {
+    const dl = this.downloads.get(id);
+    if (!dl) return;
+    if (dl.status === 'downloading') {
+      dl.status = 'cancelled';
+      try { dl.abortController?.abort(); } catch {}
+    }
+    this.remove(id);
+    showToast('Download removed', 'fa-trash');
+  },
+
+  remove(id) {
+    this.downloads.delete(id);
+    this.render();
+    this.updateBadge();
+  },
+
+  clearCompleted() {
+    let n = 0;
+    for (const [id, dl] of [...this.downloads.entries()]) {
+      if (dl.status === 'completed' || dl.status === 'failed') { this.downloads.delete(id); n++; }
+    }
+    this.render();
+    this.updateBadge();
+    if (n) showToast(`Cleared ${n} download${n > 1 ? 's' : ''}`, 'fa-broom');
+  },
+
+  setFilter(f) { this._filter = f; this.render(); },
+
+  filteredList() {
+    const all = [...this.downloads.values()].sort((a, b) => b.createdAt - a.createdAt);
+    if (this._filter === 'all') return all;
+    return all.filter(d => d.status === this._filter);
+  },
+
+  render() {
+    const container = document.getElementById('downloadManagerList');
+    if (!container) return;
+    const summary = document.getElementById('dlSummary');
+    const clearBtn = document.getElementById('dlClearBtn');
+    const items = this.filteredList();
+    const totalCount = this.downloads.size;
+
+    if (summary) summary.style.display = totalCount > 0 ? 'flex' : 'none';
+    if (clearBtn) clearBtn.style.display = totalCount > 0 ? 'inline-flex' : 'none';
+
+    // Update filter chip active state
+    document.querySelectorAll('#dlSummary .filter-chip').forEach(el => {
+      el.classList.toggle('active', el.dataset.dlFilter === this._filter);
+    });
+
+    if (!items.length) {
+      container.innerHTML = totalCount === 0
+        ? `<div class="dl-empty"><i class="fa-solid fa-download"></i><p>No downloads yet.</p><p style="font-size:0.8rem;margin-top:6px;opacity:0.7">Tap the download button on any title to save it here.</p></div>`
+        : `<div class="dl-empty"><i class="fa-solid fa-filter"></i><p>No downloads in this view.</p></div>`;
+      this.updateBadge();
+      return;
+    }
+    container.innerHTML = items.map(dl => this.renderItem(dl)).join('');
+    this.updateBadge();
+  },
+
+  renderItem(dl) {
+    const pct = dl.size > 0 ? Math.min(100, (dl.downloaded / dl.size) * 100) : 0;
+    let statusText, statusClass = '';
+    switch (dl.status) {
+      case 'pending': statusText = 'Starting…'; break;
+      case 'downloading': statusText = `${pct.toFixed(0)}% · ${formatBytes(dl.downloaded)}${dl.size ? ' / ' + formatBytes(dl.size) : ''}`; break;
+      case 'paused': statusText = `Paused · ${formatBytes(dl.downloaded)}${dl.size ? ' / ' + formatBytes(dl.size) : ''}`; statusClass = 'paused'; break;
+      case 'completed': statusText = `Completed · ${formatBytes(dl.size || dl.downloaded)}`; statusClass = 'ok'; break;
+      case 'failed': statusText = `Failed · will retry${dl.error ? ' (' + dl.error + ')' : ''}`; statusClass = 'err'; break;
+      default: statusText = dl.status;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+    const buttons = [];
+    if (dl.status === 'downloading' || dl.status === 'pending') {
+      buttons.push(`<button class="dl-btn" onclick="downloadManager.pause('${dl.id}')" title="Pause"><i class="fa-solid fa-pause"></i></button>`);
+    } else if (dl.status === 'paused' || dl.status === 'failed') {
+      buttons.push(`<button class="dl-btn" onclick="downloadManager.resume('${dl.id}')" title="Resume"><i class="fa-solid fa-play"></i></button>`);
     }
+    buttons.push(`<button class="dl-btn danger" onclick="downloadManager.cancel('${dl.id}')" title="Remove"><i class="fa-solid fa-xmark"></i></button>`);
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      padding: 12px 12px 90px 12px;
+    const poster = dl.poster ? `background-image:url('${esc(safeUrl(dl.poster))}')` : '';
+
+    return `<div class="download-item">
+      <div class="download-thumb" style="${poster}"></div>
+      <div class="download-info">
+        <div class="download-title">${esc(dl.title)}</div>
+        <div class="download-status ${statusClass}">${esc(statusText)}</div>
+        <div class="download-progress"><div class="download-progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div class="download-actions">${buttons.join('')}</div>
+    </div>`;
+  },
+
+  updateBadge() {
+    const badge = document.getElementById('downloadsBadge');
+    if (!badge) return;
+    const active = [...this.downloads.values()].filter(d =>
+      d.status === 'downloading' || d.status === 'paused' || d.status === 'pending' || d.status === 'failed'
+    ).length;
+    if (active > 0) {
+      badge.textContent = active;
+      badge.style.display = 'inline-flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  },
+
+  throttledNotifyProgress(dl) {
+    if (!settings.notifications || !notificationsEnabled()) return;
+    const now = Date.now();
+    if (now - this._lastNotifyAt < 3000) return;
+    this._lastNotifyAt = now;
+    const pct = dl.size > 0 ? Math.round((dl.downloaded / dl.size) * 100) : 0;
+    const body = dl.size > 0
+      ? `${pct}% · ${formatBytes(dl.downloaded)} / ${formatBytes(dl.size)}`
+      : `${formatBytes(dl.downloaded)} downloaded`;
+    showNotification(`Downloading ${dl.title}`, {
+      body,
+      tag: 'kz-dl-' + dl.id,
+      renotify: false,
+      silent: true,
+      requireInteraction: false
+    });
+  },
+
+  notifyComplete(dl) {
+    if (!settings.notifications || !notificationsEnabled()) return;
+    showNotification('Download complete', {
+      body: `${dl.title} (${formatBytes(dl.size || dl.downloaded)})`,
+      tag: 'kz-dl-' + dl.id,
+      renotify: true,
+      silent: false,
+      requireInteraction: false
+    });
+  }
+};
+window.downloadManager = downloadManager;
+
+/* Filter chips in downloads page */
+document.addEventListener('click', (e) => {
+  const chip = e.target.closest('#dlSummary .filter-chip');
+  if (chip && chip.dataset.dlFilter) {
+    downloadManager.setFilter(chip.dataset.dlFilter);
+  }
+});
+
+/* ============ Download button handler ============ */
+window.handleDownloadClick = async (e) => {
+  if (e) e.preventDefault();
+  const url = getCurrentDownloadUrl();
+  if (!url) { showToast("No download link available.", "fa-circle-exclamation"); return; }
+  if (url.includes('.m3u8')) { showToast("HLS streams can't be downloaded directly.", "fa-circle-exclamation"); return; }
+  if (isEmbedUrl(url)) { showToast("This stream can't be downloaded.", "fa-circle-exclamation"); return; }
+
+  // Ensure notification permission is requested up front if enabled
+  if (settings.notifications && !notificationsEnabled()) {
+    const ok = await requestNotificationPermission();
+    if (!ok) {
+      // Don't disable the setting — just warn once
+      showToast("Notifications blocked — downloads still work", 'fa-bell-slash', 2500);
+    }
+  }
+
+  // Determine file size (already cached if user opened details)
+  let size = fileSizeCache.get(url);
+  if (size === undefined) {
+    size = await fetchRemoteFileSize(url);
+    fileSizeCache.set(url, size);
+  }
+
+  const safeTitle = (activeMovie?.title || 'movie')
+    .replace(/[^a-z0-9]/gi, '_').toLowerCase();
+  const ext = /\.mkv(\?|#|$)/i.test(url) ? 'mkv' : 'mp4';
+
+  // Very large files: fall back to silent-iframe (no download manager)
+  if (size > MAX_BLOB_DOWNLOAD) {
+    const ok = silentIframeDownload(url);
+    showToast(ok ? "Download started in background" : "Download failed", ok ? "fa-circle-check" : "fa-circle-exclamation");
+    return;
+  }
+
+  let title = activeMovie?.title || 'Movie';
+  if (activeEpisodeKey) {
+    const lbl = formatEpisodeLabel(`${activeMovie.id}_${activeEpisodeKey}`);
+    if (lbl) title += ` · ${lbl}`;
+  }
+
+  downloadManager.create({
+    url,
+    filename: `${safeTitle}.${ext}`,
+    title,
+    poster: activeMovie?.image || '',
+    size
+  });
+
+  showToast("Added to Downloads", "fa-download", 2000);
+  switchNavTab('downloads');
+};
+
+/* ==================================================================
+   ============== END DOWNLOAD MANAGER ==============================
+   ================================================================== */
+
+
+/* ===== APP SETTINGS ===== */
+const defaultSettings = {
+  autoplay: true,
+  dataSaver: false,
+  reducedMotion: false,
+  notifications: true,
+  movieNotifications: true,
+  quality: 'auto'
+};
+const settings = Object.assign({}, defaultSettings, lsGet("kz_settings", {}));
+function saveSettings() { lsSet("kz_settings", settings); }
+window.toggleSetting = (key, el) => {
+  settings[key] = !settings[key];
+  if (el) el.classList.toggle('on', settings[key]);
+  saveSettings();
+  if (key === 'notifications' && settings.notifications) {
+    requestNotificationPermission().then(ok => {
+      if (ok) showToast("Download notifications enabled", "fa-bell");
+      else {
+        showToast("Notifications blocked in browser settings", "fa-circle-exclamation");
+        settings.notifications = false;
+        saveSettings();
+        refreshSettingUI();
+      }
+    });
+  }
+  if (key === 'movieNotifications' && settings.movieNotifications) {
+    requestNotificationPermission().then(ok => {
+      if (ok) showToast("New movie notifications enabled", "fa-bell");
+      else {
+        showToast("Notifications blocked in browser settings", "fa-circle-exclamation");
+        settings.movieNotifications = false;
+        saveSettings();
+        refreshSettingUI();
+      }
+    });
+  }
+};
+function refreshSettingUI() {
+  ['autoplay','dataSaver','reducedMotion','notifications','movieNotifications'].forEach(k => {
+    const el = document.getElementById('sw' + k.charAt(0).toUpperCase() + k.slice(1));
+    if (el) el.classList.toggle('on', !!settings[k]);
+  });
+  const q = document.getElementById('settingQuality');
+  if (q) q.value = settings.quality;
+}
+
+function makeAvatarUrl(style, seed) {
+  return `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}&backgroundColor=${AVATAR_BG_COLORS}`;
+}
+let currentAvatarSeed = '';
+let selectedAvatarUrl = '';
+function renderAvatarOptions() {
+  const grid = document.getElementById('avatarPickerGrid');
+  if (!grid) return;
+  if (!currentAvatarSeed) currentAvatarSeed = Math.random().toString(36).substring(2, 8);
+  grid.innerHTML = AVATAR_STYLES.map((style, i) => {
+    const seed = currentAvatarSeed + i;
+    const url = makeAvatarUrl(style, seed);
+    const selected = selectedAvatarUrl === url ? 'selected' : '';
+    return `<div class="avatar-option ${selected}" data-url="${esc(url)}"><img src="${esc(url)}" alt="avatar" loading="lazy"/></div>`;
+  }).join('');
+  grid.querySelectorAll('.avatar-option').forEach(el => {
+    el.onclick = () => {
+      selectedAvatarUrl = el.dataset.url;
+      grid.querySelectorAll('.avatar-option').forEach(x => x.classList.remove('selected'));
+      el.classList.add('selected');
+    };
+  });
+}
+window.shuffleAvatars = () => {
+  currentAvatarSeed = Math.random().toString(36).substring(2, 8);
+  selectedAvatarUrl = '';
+  renderAvatarOptions();
+};
+
+let userUid = null;
+let userData = {};
+let userSubStatus = 'guest';
+let userSubExpiry = 0;
+let pendingPayment = null;
+let userUnsubscribe = null;
+let lastAppliedStatus = 'guest';
+let authMode = 'signin';
+let authModalAction = null;
+let profileSetupShownThisSession = false;
+
+getRedirectResult(auth).catch(err => { if (err?.code) console.warn('Redirect result error:', err.code); });
+
+onAuthStateChanged(auth, async (u) => {
+  if (!u) {
+    userUid = null; userData = {}; userSubStatus = 'guest'; userSubExpiry = 0;
+    profileSetupShownThisSession = false;
+    if (userUnsubscribe) { userUnsubscribe(); userUnsubscribe = null; }
+    applySubscriptionState(); updateProfileUI(); refreshAuthUI();
+    return;
+  }
+  userUid = u.uid;
+  document.getElementById("aboutUid").innerText = userUid;
+  if (u.displayName) lsSet("kz_name", u.displayName);
+  await ensureUserDoc(u);
+  await mergeGuestDataIntoAccount(u.uid);
+  try { const freshSnap = await getDoc(doc(db, 'users', userUid)); if (freshSnap.exists()) userData = freshSnap.data(); } catch {}
+  if (userUnsubscribe) userUnsubscribe();
+  userUnsubscribe = onSnapshot(doc(db, "users", userUid), (snap) => {
+    if (snap.exists()) {
+      userData = snap.data();
+      userSubStatus = computeUserStatus(userData);
+      userSubExpiry = getUserExpiry(userData);
+      applySubscriptionState(); updateProfileUI();
+    }
+  });
+  await loadUserProgressAndLikes(userUid);
+  refreshCardsWithProgress(); updateProfileUI(); refreshAuthUI();
+  const modal = document.getElementById('authModal');
+  const wasAuthModalOpen = modal && modal.classList.contains('active');
+  if (wasAuthModalOpen) {
+    const cb = authModalAction?.callback;
+    authModalAction = null;
+    closeAuthModal();
+    showToast('Signed in successfully', 'fa-circle-check');
+    if (cb) setTimeout(() => { try { cb(); } catch (e) {} }, 350);
+  }
+  const needsSetup = !userData.displayName || !userData.avatarUrl;
+  if (needsSetup && !profileSetupShownThisSession) {
+    profileSetupShownThisSession = true;
+    setTimeout(() => {
+      if (document.getElementById('authModal')?.classList.contains('active')) return;
+      if (document.getElementById('profileSetupModal')?.classList.contains('active')) return;
+      openProfileSetup();
+    }, wasAuthModalOpen ? 900 : 500);
+  }
+});
+
+async function ensureUserDoc(u) {
+  const ref = doc(db, "users", u.uid);
+  try {
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      const trialExpiry = new Date(Date.now() + PLANS.free.days * 86400000);
+      await setDoc(ref, { uid: u.uid, displayName: u.displayName || '', email: u.email || '', subscriptionStatus: 'free_trial', subscriptionPlan: 'free', subscriptionPlanName: 'Free Trial', trialExpiry, isVip: false, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+    } else {
+      const data = snap.data();
+      const patch = {};
+      if (!data.email && u.email) patch.email = u.email;
+      if (!data.displayName && u.displayName) patch.displayName = u.displayName;
+      const status = computeUserStatus(data);
+      if (status === 'expired' && data.subscriptionStatus !== 'expired' && data.subscriptionStatus !== 'pending_approval') { patch.subscriptionStatus = 'expired'; patch.isVip = false; }
+      if (Object.keys(patch).length) { patch.updatedAt = serverTimestamp(); await updateDoc(ref, patch); }
+    }
+  } catch (e) {}
+}
+
+async function mergeGuestDataIntoAccount(uid) {
+  try {
+    const localProgress = lsGet('movieProgress', {});
+    const localLikes = lsGet('likedMovies', []);
+    if (!Object.keys(localProgress).length && !localLikes.length) return;
+    const ref = doc(db, 'users', uid);
+    const snap = await getDoc(ref);
+    const existing = snap.exists() ? snap.data() : {};
+    const serverProgress = existing.progress || {};
+    const serverLikes = new Set(existing.likes || []);
+    const merged = { ...serverProgress };
+    for (const k of Object.keys(localProgress)) {
+      const lp = localProgress[k], sp = merged[k];
+      if (!sp || (lp?.updatedAt || 0) > (sp?.updatedAt || 0)) merged[k] = lp;
+    }
+    localLikes.forEach(id => serverLikes.add(id));
+    await setDoc(ref, { progress: merged, likes: [...serverLikes] }, { merge: true });
+    movieProgress = merged; likedMovieIds = [...serverLikes];
+    lsSet('movieProgress', movieProgress); lsSet('likedMovies', likedMovieIds);
+  } catch (e) {}
+}
+
+window.requireAuth = (actionName, onSuccess) => {
+  if (userUid) { onSuccess(); return; }
+  openAuthModal(actionName, onSuccess);
+};
+window.openAuthModal = (actionName, onSuccess) => {
+  authMode = 'signin';
+  authModalAction = { name: actionName, callback: onSuccess };
+  document.getElementById('authSubtitle').textContent = `Sign in to ${actionName}`;
+  const errEl = document.getElementById('authError');
+  errEl.textContent = ''; errEl.style.color = '';
+  document.getElementById('authFormMain').reset();
+  document.getElementById('authModal').classList.add('active');
+  document.body.classList.add('modal-locked');
+  updateAuthModeUI();
+  setTimeout(() => document.getElementById('authEmail')?.focus(), 100);
+};
+function maybeUnlockBodyScroll() {
+  const stillOpen = document.querySelector('.auth-modal.active, .modal-overlay.active');
+  if (!stillOpen) document.body.classList.remove('modal-locked');
+}
+window.closeAuthModal = () => {
+  document.getElementById('authModal').classList.remove('active');
+  maybeUnlockBodyScroll();
+  authModalAction = null;
+};
+function updateAuthModeUI() {
+  const isSignup = authMode === 'signup';
+  document.getElementById('authSubmitBtn').textContent = isSignup ? 'Create Account' : 'Sign In';
+  document.getElementById('authToggleMode').textContent = isSignup ? 'Sign in instead' : 'Create account';
+  document.getElementById('authTitle').textContent = isSignup ? 'Create your account' : 'Sign in to KaziFlix';
+  document.getElementById('authPassword').setAttribute('autocomplete', isSignup ? 'new-password' : 'current-password');
+}
+window.toggleAuthMode = () => {
+  authMode = authMode === 'signin' ? 'signup' : 'signin';
+  document.getElementById('authError').textContent = '';
+  document.getElementById('authError').style.color = '';
+  updateAuthModeUI();
+};
+function friendlyAuthError(err) {
+  const code = err?.code || '';
+  if (code.includes('wrong-password') || code.includes('invalid-credential')) return 'Incorrect email or password.';
+  if (code.includes('user-not-found')) return 'No account found with that email.';
+  if (code.includes('email-already-in-use')) return 'That email is already registered. Try signing in.';
+  if (code.includes('invalid-email')) return 'Please enter a valid email.';
+  if (code.includes('weak-password')) return 'Password must be at least 6 characters.';
+  if (code.includes('too-many-requests')) return 'Too many attempts. Try again later.';
+  if (code.includes('network')) return 'Network error. Check your connection.';
+  if (code.includes('popup-closed')) return 'Sign-in cancelled.';
+  if (code.includes('popup-blocked')) return 'Popup was blocked. Trying another method…';
+  if (code.includes('operation-not-supported')) return 'Sign-in not supported here. Please use email.';
+  if (code.includes('user-disabled')) return 'This account has been disabled.';
+  if (code.includes('unauthorized-domain')) return 'Domain not authorized in Firebase. Contact support.';
+  return 'Sign-in failed. Please try again.';
+}
+window.handleAuthSubmit = async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const errEl = document.getElementById('authError'); const btn = document.getElementById('authSubmitBtn');
+  errEl.style.color = ''; errEl.textContent = '';
+  if (!email || !password) { errEl.textContent = 'Email and password are required.'; return; }
+  if (authMode === 'signup' && password.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = authMode === 'signup' ? 'Creating account…' : 'Signing in…';
+  try {
+    if (authMode === 'signup') await createUserWithEmailAndPassword(auth, email, password);
+    else await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    errEl.textContent = friendlyAuthError(err);
+    btn.disabled = false; btn.textContent = originalText;
+  }
+};
+window.signInWithGoogle = async () => {
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  const errEl = document.getElementById('authError');
+  errEl.style.color = ''; errEl.textContent = '';
+  const ua = navigator.userAgent;
+  const isWebView = /; wv\)/.test(ua) || window.AndroidInterface !== undefined;
+  try {
+    if (isWebView) await signInWithRedirect(auth, provider);
+    else await signInWithPopup(auth, provider);
+  } catch (err) {
+    if (['auth/popup-blocked','auth/operation-not-supported-in-this-environment','auth/cancelled-popup-request'].includes(err.code)) {
+      try { await signInWithRedirect(auth, provider); } catch (e2) { errEl.textContent = friendlyAuthError(e2); }
+    } else { errEl.textContent = friendlyAuthError(err); }
+  }
+};
+window.showForgotPassword = async () => {
+  const email = document.getElementById('authEmail').value.trim();
+  const errEl = document.getElementById('authError');
+  errEl.style.color = '';
+  if (!email) { errEl.textContent = 'Enter your email above, then tap "Forgot password?" again.'; document.getElementById('authEmail').focus(); return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    errEl.style.color = 'var(--success-green)';
+    errEl.textContent = 'Reset link sent! Check your email inbox.';
+  } catch (err) { errEl.style.color = ''; errEl.textContent = friendlyAuthError(err); }
+};
+function refreshAuthUI() {
+  const guestCard = document.getElementById('guestProfileCard');
+  const userCard = document.getElementById('userProfileCard');
+  const linkBox = document.getElementById('linkAccountSection');
+  const linkedBox = document.getElementById('linkedAccountSection');
+  const showGuest = !userUid;
+  if (guestCard) guestCard.style.display = showGuest ? 'block' : 'none';
+  if (userCard) userCard.style.display = showGuest ? 'none' : 'block';
+  if (linkBox) linkBox.style.display = showGuest ? 'block' : 'none';
+  if (linkedBox) linkedBox.style.display = showGuest ? 'none' : 'block';
+}
+window.signOutUser = async () => {
+  if (!confirm("Sign out? Your progress is saved to your account.")) return;
+  try {
+    if (userUid && (Object.keys(movieProgress).length || likedMovieIds.length)) {
+      await setDoc(doc(db, "users", userUid), { progress: movieProgress, likes: likedMovieIds }, { merge: true });
+    }
+  } catch (e) {}
+  try {
+    await signOut(auth);
+    lsDel("movieProgress"); lsDel("likedMovies"); lsDel("recentlyWatched"); lsDel("searchHistory");
+    lsDel("kz_name"); lsDel("lastChatRead");
+    movieProgress = {}; likedMovieIds = []; recentlyWatchedIds = []; searchHistory = []; lastChatRead = 0;
+    if (chatUnsubscribe) { chatUnsubscribe(); chatUnsubscribe = null; }
+    chatMessagesCache = [];
+    currentAvatarSeed = ''; selectedAvatarUrl = '';
+    updateProfileUI();
+    showToast("Signed out");
+  } catch { showToast("Sign-out failed", "fa-circle-exclamation"); }
+};
+window.openLinkAccount = () => openAuthModal('save your progress', () => {});
+window.linkGoogleAccount = () => signInWithGoogle();
+window.linkEmailAccount = () => openAuthModal('sign in', () => {});
+
+async function loadUserProgressAndLikes(uid) {
+  try {
+    const snap = await getDoc(doc(db, "users", uid));
+    if (snap.exists()) {
+      const d = snap.data();
+      const serverProgress = d.progress || {};
+      const serverLikes = new Set(d.likes || []);
+      const localProgress = lsGet("movieProgress", {});
+      const merged = { ...serverProgress };
+      for (const k of Object.keys(localProgress)) {
+        if (!merged[k] || (localProgress[k]?.updatedAt || 0) > (merged[k]?.updatedAt || 0)) merged[k] = localProgress[k];
+      }
+      lsSet("movieProgress", merged); movieProgress = merged;
+      const localLikes = lsGet("likedMovies", []);
+      localLikes.forEach(id => serverLikes.add(id));
+      likedMovieIds = [...new Set([...likedMovieIds, ...serverLikes])];
+      lsSet("likedMovies", likedMovieIds);
+    }
+  } catch (e) {}
+}
+
+window.openProfileSetup = () => {
+  if (!userUid) { openAuthModal('set up your profile', () => openProfileSetup()); return; }
+  selectedAvatarUrl = userData.avatarUrl || '';
+  const nameInput = document.getElementById('setupNameInput');
+  nameInput.value = userData.displayName || auth.currentUser?.displayName || (auth.currentUser?.email ? auth.currentUser.email.split('@')[0] : '');
+  if (userData.avatarUrl && !currentAvatarSeed) {
+    const m = userData.avatarUrl.match(/seed=([^&]+)/);
+    if (m) currentAvatarSeed = decodeURIComponent(m[1]).replace(/\d+$/, '');
+  }
+  renderAvatarOptions();
+  document.getElementById('profileSetupModal').classList.add('active');
+  document.body.classList.add('modal-locked');
+  setTimeout(() => nameInput.focus(), 120);
+};
+window.closeProfileSetup = () => {
+  document.getElementById('profileSetupModal').classList.remove('active');
+  maybeUnlockBodyScroll();
+};
+window.saveProfileSetup = async () => {
+  if (!userUid) return;
+  const name = document.getElementById('setupNameInput').value.trim().slice(0, 24);
+  if (!name) { showToast('Please enter a name', 'fa-circle-exclamation'); return; }
+  if (!selectedAvatarUrl) { showToast('Please pick an avatar', 'fa-circle-exclamation'); return; }
+  const btn = document.getElementById('profileSetupSaveBtn');
+  btn.disabled = true;
+  const origText = btn.textContent;
+  btn.textContent = 'Saving…';
+  try {
+    await updateDoc(doc(db, 'users', userUid), { displayName: name, avatarUrl: selectedAvatarUrl, profileCompleted: true, updatedAt: serverTimestamp() });
+    try { if (auth.currentUser) await updateProfile(auth.currentUser, { displayName: name }); } catch {}
+    lsSet('kz_name', name);
+    showToast('Profile saved', 'fa-circle-check');
+    closeProfileSetup();
+  } catch (e) { showToast('Save failed: ' + e.message, 'fa-circle-exclamation'); }
+  finally { btn.disabled = false; btn.textContent = origText; }
+};
+
+function applySubscriptionState() {
+  const paywall = document.getElementById("paywallOverlay");
+  const pendingBanner = document.getElementById("pendingBanner");
+  if (!userUid) {
+    paywall.classList.remove('active'); pendingBanner.classList.remove('show');
+    lastAppliedStatus = 'guest'; updateSubBadge(); updatePendingPage();
+    return;
+  }
+  const isActive = userSubStatus === 'active' || userSubStatus === 'free_trial';
+  const isPending = userSubStatus === 'pending_approval';
+  const wasPending = lastAppliedStatus === 'pending_approval';
+  if (isActive) { paywall.classList.remove('active'); pendingBanner.classList.remove('show'); }
+  else if (isPending) {
+    paywall.classList.remove('active'); pendingBanner.classList.add('show');
+    if (!wasPending) switchNavTab('pending');
+  } else {
+    const onPaymentFlow = document.getElementById('paymentPage').style.display === 'block'
+      || document.getElementById('plansPage').style.display === 'block';
+    if (!onPaymentFlow) paywall.classList.add('active');
+    pendingBanner.classList.remove('show');
+    renderPlanList('planList');
+    document.getElementById("pwTitle").textContent = userSubStatus === 'expired' ? "Your subscription has expired" : "Unlock KaziFlix";
+    document.getElementById("pwSub").textContent = userSubStatus === 'expired' ? "Choose a plan to continue streaming" : "Choose a plan to start watching";
+  }
+  lastAppliedStatus = userSubStatus;
+  updateProfileUI(); updateSubBadge(); updatePendingPage();
+}
+
+function updateSubBadge() {
+  const badge = document.getElementById("profileSubBadge");
+  if (!badge) return;
+  const status = userSubStatus;
+  if (status === 'guest') { badge.innerHTML = ''; return; }
+  const labels = { free_trial: 'Free Trial', active: 'Active VIP', pending_approval: 'Pending Approval', expired: 'Expired', inactive: 'Inactive' };
+  const icons = { free_trial: 'fa-hourglass-half', active: 'fa-crown', pending_approval: 'fa-clock', expired: 'fa-circle-xmark', inactive: 'fa-circle-xmark' };
+  let countdown = '';
+  if ((status === 'active' || status === 'free_trial') && userSubExpiry > 0) countdown = ' · ' + formatCountdown(userSubExpiry) + ' left';
+  const icon = icons[status] || 'fa-circle-info';
+  const label = labels[status] || status;
+  badge.innerHTML = `<span class="sub-badge ${status}"><i class="fa-solid ${icon}"></i> ${label}${countdown}</span>`;
+}
+
+function renderPlanList(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const plans = ['daily', '3day', 'weekly', '2week'];
+  container.innerHTML = plans.map(id => {
+    const p = PLANS[id];
+    const featured = id === 'weekly';
+    return `<div class="plan-item ${featured ? 'featured' : ''}" onclick="choosePlan('${id}')">
+      <div><div class="name">${esc(p.name)}${featured ? ' ⭐' : ''}</div><div class="duration">${esc(p.label)}${featured ? ' · Best Value' : ''}</div></div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="price">UGX ${p.price.toLocaleString()}<small>${p.days}d access</small></div>
+        <button class="btn-plan-select" onclick="event.stopPropagation();choosePlan('${id}')">Select</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.choosePlan = (planId) => {
+  if (!PLANS[planId]) return;
+  requireAuth('subscribe', () => {
+    document.getElementById('paywallOverlay').classList.remove('active');
+    switchNavTab('payment');
+    renderPaymentPage(planId);
+  });
+};
+
+const viewMap = {
+  home: 'homePage', search: 'searchPage', chat: 'chatPage', profile: 'profilePage',
+  settings: 'settingsPage', about: 'aboutPage', mylist: 'mylistPage',
+  plans: 'plansPage', payment: 'paymentPage', pending: 'pendingPage',
+  downloads: 'downloadsPage'
+};
+window.switchNavTab = (tabName, fromRoute = false) => {
+  resetPlayer();
+  document.body.classList.remove("details-active");
+  Object.values(viewMap).forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+  document.getElementById("categoryView").style.display = "none";
+  document.getElementById("detailsPage").style.display = "none";
+  document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+  const btnMap = { home: 'navHomeBtn', search: 'navSearchBtn', chat: 'navChatBtn', mylist: 'navMylistBtn', profile: 'navProfileBtn' };
+  if (btnMap[tabName]) document.getElementById(btnMap[tabName]).classList.add("active");
+  if (viewMap[tabName]) document.getElementById(viewMap[tabName]).style.display = 'block';
+
+  if (tabName === 'payment' || tabName === 'plans') {
+    document.getElementById('paywallOverlay').classList.remove('active');
+  }
+
+  if (tabName === 'chat') { initChatListener(); scrollChatBottom(true); markChatRead(); }
+  if (tabName === 'profile') updateProfileUI();
+  if (tabName === 'mylist') renderMyList();
+  if (tabName === 'settings') { refreshSettingUI(); refreshAuthUI(); }
+  if (tabName === 'downloads') downloadManager.render();
+  if (tabName === 'about') {
+    document.getElementById('aboutInstalledVersion').textContent = APP_VERSION;
+    document.getElementById('aboutAvailableVersion').textContent = currentUpdateData?.version || '—';
+  }
+  if (tabName === 'search') setTimeout(() => document.getElementById('searchInput').focus(), 100);
+  if (tabName === 'plans') {
+    document.getElementById("plansPageSub").textContent = userSubStatus === 'active' ? `You're on ${userData.subscriptionPlanName || 'Active VIP'} — extend anytime` : 'Upgrade to unlock all content';
+    renderPlanList('plansPageList');
+  }
+  if (tabName === 'pending') updatePendingPage();
+  if (!fromRoute) pushRoute('/' + tabName);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+function renderPaymentPage(planId) {
+  const plan = PLANS[planId];
+  if (!plan) return;
+  document.getElementById("pfPlanName").textContent = `${plan.name} (${plan.label})`;
+  document.getElementById("pfAmount").textContent = plan.price.toLocaleString();
+  document.getElementById("paymentForm").dataset.planId = planId;
+  document.getElementById("pfSenderName").value = userData.displayName || '';
+  document.getElementById("pfPhone").value = userData.phone || '';
+  document.getElementById("pfTxn").value = '';
+}
+
+window.submitPayment = async (e) => {
+  e.preventDefault();
+  if (!userUid) { showToast("Please sign in first", "fa-circle-exclamation"); openAuthModal('submit payment', () => {}); return; }
+  const planId = document.getElementById("paymentForm").dataset.planId;
+  const plan = PLANS[planId];
+  if (!plan) { showToast("Invalid plan", "fa-circle-exclamation"); return; }
+  const senderName = document.getElementById("pfSenderName").value.trim();
+  const phoneUsed = document.getElementById("pfPhone").value.trim();
+  const transactionId = document.getElementById("pfTxn").value.trim();
+  if (!senderName || !phoneUsed || !transactionId) { showToast("All fields are required", "fa-circle-exclamation"); return; }
+  const btn = document.getElementById("pfSubmitBtn");
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Submitting…`;
+  try {
+    const dupSnap = await getDocs(query(collection(db, "pending_payments"), where("transactionId", "==", transactionId)));
+    if (!dupSnap.empty) { showToast("This transaction ID has already been submitted", "fa-circle-exclamation"); btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Submit Payment`; return; }
+
+    const userAllSnap = await getDocs(query(collection(db, "pending_payments"), where("uid", "==", userUid)));
+    const hasPending = userAllSnap.docs.some(d => (d.data().status || 'pending') === 'pending');
+    if (hasPending) { showToast("You already have a pending payment awaiting approval", "fa-circle-exclamation"); btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Submit Payment`; switchNavTab('pending'); return; }
+
+    await addDoc(collection(db, "pending_payments"), { uid: userUid, userName: userData.displayName || 'User_' + userUid.substring(0, 6), userEmail: userData.email || '', phoneUsed, senderName, transactionId, planId: plan.id, planName: plan.name, planDays: plan.days, amount: plan.price, currency: plan.currency, status: 'pending', createdAt: serverTimestamp() });
+    await updateDoc(doc(db, "users", userUid), { subscriptionStatus: 'pending_approval', pendingPlanId: plan.id, pendingTransactionId: transactionId, pendingSince: serverTimestamp(), phone: phoneUsed, updatedAt: serverTimestamp() });
+    showToast("Payment submitted — awaiting approval", "fa-circle-check");
+    switchNavTab('pending');
+  } catch (err) { showToast("Submit failed: " + err.message, "fa-circle-exclamation"); }
+  finally { btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Submit Payment`; }
+};
+
+async function updatePendingPage() {
+  if (!userUid || userSubStatus !== 'pending_approval') return;
+  try {
+    const snap = await getDocs(query(collection(db, "pending_payments"), where("uid", "==", userUid)));
+    const pending = snap.docs.find(d => (d.data().status || 'pending') === 'pending');
+    if (pending) {
+      const p = { id: pending.id, ...pending.data() };
+      pendingPayment = p;
+      document.getElementById("pendingPlan").textContent = p.planName || p.planId;
+      document.getElementById("pendingAmount").textContent = Number(p.amount || 0).toLocaleString();
+      document.getElementById("pendingTxn").textContent = p.transactionId || '—';
+      document.getElementById("pendingDate").textContent = p.createdAt?.toDate ? p.createdAt.toDate().toLocaleString() : '—';
+    }
+  } catch (e) {}
+}
+
+let progressPersistQueue = {};
+let progressPersistTimer = null;
+async function persistProgress(key, data) {
+  if (!userUid) return;
+  progressPersistQueue[key] = data;
+  clearTimeout(progressPersistTimer);
+  progressPersistTimer = setTimeout(async () => {
+    const batch = progressPersistQueue; progressPersistQueue = {};
+    const update = {};
+    for (const k of Object.keys(batch)) update[k] = batch[k] === null ? null : batch[k];
+    try { await setDoc(doc(db, "users", userUid), { progress: update }, { merge: true }); } catch (e) {}
+  }, 1500);
+}
+function flushProgressNow() {
+  if (!userUid) return;
+  const batch = progressPersistQueue; progressPersistQueue = {};
+  clearTimeout(progressPersistTimer);
+  if (!Object.keys(batch).length) return;
+  const update = {};
+  for (const k of Object.keys(batch)) update[k] = batch[k];
+  setDoc(doc(db, "users", userUid), { progress: update }, { merge: true }).catch(()=>{});
+}
+async function persistLikes() { if (!userUid) return; try { await setDoc(doc(db, "users", userUid), { likes: likedMovieIds }, { merge: true }); } catch {} }
+async function persistDisplayName(name) {
+  lsSet("kz_name", name);
+  if (!userUid) return;
+  try { await updateDoc(doc(db, "users", userUid), { displayName: name, updatedAt: serverTimestamp() }); try { if (auth.currentUser) await updateProfile(auth.currentUser, { displayName: name }); } catch {} } catch {}
+}
+
+let allMovies = [];
+let featuredMovies = [];
+let currentHeroIndex = 0;
+let heroTimer = null;
+let activeMovie = null;
+let activeVideoUrl = "";
+let chatUnsubscribe = null;
+let currentUpdateData = null;
+let hlsInstance = null;
+let activeEpisodeKey = null;
+let isTrailerPlaying = false;
+let currentSeasonIndex = 0;
+let currentEpisodesContext = null;
+let activeCategoryType = null;
+let activeCategoryValue = null;
+let activeSubFilter = null;
+let recentlyWatchedIds = lsGet("recentlyWatched", []);
+let likedMovieIds = lsGet("likedMovies", []);
+let movieProgress = lsGet("movieProgress", {});
+let searchHistory = lsGet("searchHistory", []);
+let lastChatRead = lsGet("lastChatRead", 0);
+let chatMessagesCache = [];
+const tmdbCache = new Map();
+const viewedThisSession = new Set();
+const reportedThisSession = new Set();
+let catalogueFullyLoaded = false;
+let moviesUnsubscribe = null;
+let knownMovieIds = new Set(lsGet('kz_known_movies', []));
+let isFirstEverCatalogLoad = knownMovieIds.size === 0;
+
+(function pruneProgress() {
+  const now = Date.now();
+  let changed = false;
+  for (const k of Object.keys(movieProgress)) {
+    const p = movieProgress[k];
+    if (!p) { delete movieProgress[k]; changed = true; continue; }
+    const ratio = (p.duration > 0) ? (p.currentTime / p.duration) : 1;
+    if (ratio < 0.02 && p.updatedAt && (now - p.updatedAt > 30 * 86400000)) {
+      delete movieProgress[k]; changed = true;
+    }
+  }
+  if (changed) lsSet('movieProgress', movieProgress);
+})();
+
+function pushRoute(hash) { if (location.hash !== hash) history.pushState({ hash }, "", hash); }
+window.addEventListener("popstate", () => handleRoute());
+function handleRoute() {
+  const h = location.hash.replace(/^#/, "");
+  const updateModal = document.getElementById("updateModalOverlay");
+  if (updateModal.classList.contains("active")) { updateModal.classList.remove("active"); return; }
+  window.scrollTo(0, 0);
+  if (h.startsWith("/movie/")) loadMovieDetailsById(decodeURIComponent(h.split("/movie/")[1]), true);
+  else if (h === "/chat") switchNavTab("chat", true);
+  else if (h === "/profile") switchNavTab("profile", true);
+  else if (h === "/settings") switchNavTab("settings", true);
+  else if (h === "/about") switchNavTab("about", true);
+  else if (h === "/mylist") switchNavTab("mylist", true);
+  else if (h === "/search") switchNavTab("search", true);
+  else if (h === "/plans") switchNavTab("plans", true);
+  else if (h === "/downloads") switchNavTab("downloads", true);
+  else if (h.startsWith("/payment/")) { const pid = decodeURIComponent(h.split("/payment/")[1]); switchNavTab("payment", true); renderPaymentPage(pid); }
+  else if (h === "/pending") switchNavTab("pending", true);
+  else if (h.startsWith("/category/")) openCategoryView(decodeURIComponent(h.split("/category/")[1]), true);
+  else if (h.startsWith("/genre/")) openGenreView(decodeURIComponent(h.split("/genre/")[1]), true);
+  else if (h.startsWith("/vj/")) openVJView(decodeURIComponent(h.split("/vj/")[1]), true);
+  else switchNavTab("home", true);
+}
+window.goBack = () => { if (history.length > 1) history.back(); else switchNavTab("home"); };
+
+function updateProfileUI() {
+  const watchedEl = document.getElementById("profileWatchedCount");
+  const likesEl = document.getElementById("profileLikesCount");
+  if (watchedEl) watchedEl.innerText = recentlyWatchedIds.length;
+  if (likesEl) likesEl.innerText = likedMovieIds.length;
+  const avatarImg = document.getElementById("profileAvatarImg");
+  const initialEl = document.getElementById("profileInitial");
+  const displayName = userData.displayName || auth.currentUser?.displayName || (auth.currentUser?.email ? auth.currentUser.email.split('@')[0] : '') || 'U';
+  if (avatarImg && initialEl) {
+    if (userData.avatarUrl) { avatarImg.src = userData.avatarUrl; avatarImg.style.display = 'block'; initialEl.style.display = 'none'; }
+    else { avatarImg.style.display = 'none'; initialEl.style.display = 'block'; initialEl.innerText = displayName.charAt(0).toUpperCase(); }
+  }
+  const emailEl = document.getElementById("profileEmailDisplay");
+  if (emailEl) emailEl.innerText = userData.email || auth.currentUser?.email || '—';
+  downloadManager.updateBadge();
+}
+document.getElementById('profileNameInput').addEventListener('change', e => {
+  const name = e.target.value.trim().slice(0, 24);
+  if (!name) return;
+  persistDisplayName(name); updateProfileUI();
+  showToast("Name updated");
+});
+window.clearLocalData = async () => {
+  if (!confirm("Clear local cache? Anything synced to your account is preserved.")) return;
+  lsDel("recentlyWatched"); lsDel("searchHistory");
+  recentlyWatchedIds = []; searchHistory = [];
+  renderRecentlyWatched(); updateProfileUI();
+  showToast("Local cache cleared", "fa-broom");
+};
+
+function renderMyList() {
+  const grid = document.getElementById("mylistGrid");
+  const items = likedMovieIds.map(id => allMovies.find(m => m.id === id)).filter(m => m && m.status !== 'draft');
+  if (!items.length) { grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fa-solid fa-bookmark"></i><p>Your list is empty.</p></div>`; return; }
+  grid.innerHTML = items.map(movieCardHtml).join('');
+  attachCardHandlers(grid);
+}
+
+function movieCardHtml(m) {
+  const latest = getLatestProgress(m.id);
+  const pct = latest ? getProgressPct(latest.data) : 0;
+  return `<div class="movie-card" data-id="${esc(m.id)}" role="button" tabindex="0">
+    <div class="poster-container">
+      ${m.sub ? `<div class="vj-badge">${esc(m.sub)}</div>` : ''}
+      <img class="movie-poster" src="${esc(safeUrl(m.image))}" alt="${esc(m.title||'')}" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/130x180?text=No+Poster';" />
+      ${pct > 0 ? `<div class="card-progress-bar"><div class="card-progress-fill" style="width:${pct}%"></div></div>` : ''}
+    </div>
+    <div class="card-info"><div class="movie-name">${esc(m.title||'Untitled')}</div><div class="movie-sub">${esc(m.category||m.genre||'')}</div></div>
+  </div>`;
+}
+function attachCardHandlers(container) { container.querySelectorAll('.movie-card').forEach(el => { el.onclick = () => loadMovieDetailsById(el.dataset.id); }); }
+function refreshCardsWithProgress() {
+  if (document.getElementById('homePage').style.display !== 'none') renderHome();
+  if (document.getElementById('mylistPage').style.display !== 'none') renderMyList();
+  if (document.getElementById('categoryView').style.display !== 'none') renderCategoryGrid();
+}
+
+function sortByDate(arr) {
+  return [...arr].sort((a, b) => {
+    const ta = tsToMs(a.createdAt) || tsToMs(a.updatedAt) || 0;
+    const tb = tsToMs(b.createdAt) || tsToMs(b.updatedAt) || 0;
+    if (ta === tb) return String(a.title || '').localeCompare(String(b.title || ''));
+    return tb - ta;
+  });
+}
+
+async function fetchAllMovies() {
+  try {
+    if (moviesUnsubscribe) return;
+    moviesUnsubscribe = onSnapshot(collection(db, "movies"), (snap) => {
+      // Detect new movies for notifications
+      const newOnes = [];
+      snap.docs.forEach(d => {
+        if (!knownMovieIds.has(d.id)) {
+          knownMovieIds.add(d.id);
+          newOnes.push({ id: d.id, data: d.data() });
+        }
+      });
+
+      // Fire notifications only after the first ever catalogue load
+      if (!isFirstEverCatalogLoad && settings.movieNotifications && notificationsEnabled() && newOnes.length) {
+        newOnes.slice(0, 5).forEach(({ id, data: m }) => {
+          if ((m.status || 'published') === 'draft') return;
+          const poster = safeUrl(m.image);
+          showNotification('New on KaziFlix 🎬', {
+            body: m.title || 'A new title is now available',
+            icon: poster || KZ_NOTIF_ICON,
+            tag: 'kz-new-' + id,
+            renotify: true,
+            silent: false,
+            data: { movieId: id }
+          });
+        });
+        if (newOnes.length === 1) showToast(`New: ${newOnes[0].data.title || 'title'}`, 'fa-bell');
+        else showToast(`${newOnes.length} new titles added`, 'fa-bell');
+      }
+
+      lsSet('kz_known_movies', [...knownMovieIds]);
+      isFirstEverCatalogLoad = false;
+
+      allMovies = sortByDate(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      catalogueFullyLoaded = true;
+      processMoviesState();
+    }, (err) => {
+      console.error('[KaziFlix] movies snapshot error:', err);
+      if (!catalogueFullyLoaded) {
+        document.getElementById("homeSections").innerHTML = `<div class="empty-state"><i class="fa-solid fa-wifi"></i><p>Failed to load catalogue.</p><button class="btn-action-primary" onclick="retryInitialLoad()" style="margin-top:12px">Retry</button></div>`;
+      }
+    });
+  } catch (e) {
+    document.getElementById("homeSections").innerHTML = `<div class="empty-state"><i class="fa-solid fa-wifi"></i><p>Failed to load catalogue.</p><button class="btn-action-primary" onclick="retryInitialLoad()" style="margin-top:12px">Retry</button></div>`;
+  }
+}
+window.retryInitialLoad = () => {
+  if (moviesUnsubscribe) { try { moviesUnsubscribe(); } catch {} moviesUnsubscribe = null; }
+  renderSkeletons();
+  fetchAllMovies();
+};
+
+renderSkeletons();
+function renderSkeletons() {
+  const container = document.getElementById("homeSections");
+  const categories = ["Latest Movies","Latest TvShows","Latest Animation","Indian Movies"];
+
+  document.getElementById("heroContainer").innerHTML = `
+    <div class="hero-skeleton-wrapper">
+      <div class="skeleton hero-poster-skeleton"></div>
+      <div class="hero-text-skeleton">
+        <div class="skeleton line title"></div>
+        <div class="skeleton line genre"></div>
+        <div class="skeleton line desc"></div>
+        <div class="sk      padding: 12px 12px 90px 12px;
       max-width: 1200px;
       margin: 0 auto;
       min-height: 100vh;
