@@ -29,45 +29,6 @@ body.player-open .bottom-nav{display:none}
 .btn-ghost:hover{border-color:var(--accent-purple);background:rgba(124,58,237,0.08)}
 .btn-container{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .btn-container .btn{flex:1}
-#paywallOverlay{position:fixed;inset:0;background:var(--bg-color);z-index:2500;display:none;overflow-y:auto;padding:24px 16px calc(90px + env(safe-area-inset-bottom,0))}
-#paywallOverlay.active{display:block}
-.pw-card{max-width:520px;margin:24px auto;background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,0.6)}
-.pw-icon{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--accent-purple),#ec4899);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:#fff;margin:0 auto 14px;box-shadow:0 10px 22px var(--accent-glow)}
-.pw-title{font-size:1.4rem;font-weight:800;text-align:center;margin-bottom:6px}
-.pw-sub{text-align:center;color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;line-height:1.5}
-.plan-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
-.plan-item{background:var(--input-bg);border:1px solid var(--card-border);border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.2s}
-.plan-item:hover{border-color:var(--accent-purple);transform:translateY(-2px);box-shadow:0 6px 16px rgba(124,58,237,0.15)}
-.plan-item.featured{border-color:var(--accent-pill);background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(236,72,153,0.06))}
-.plan-item .name{font-weight:700;font-size:1.02rem;margin-bottom:2px}
-.plan-item .duration{font-size:0.78rem;color:var(--text-muted)}
-.plan-item .price{font-size:1.15rem;font-weight:800;color:var(--accent-pill)}
-.plan-item .price small{font-size:0.72rem;font-weight:600;color:var(--text-muted);display:block;text-align:right}
-.pw-notice{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.35);border-radius:12px;padding:14px;font-size:0.85rem;color:#fcd34d;line-height:1.5;margin-bottom:16px}
-.pw-notice i{color:var(--warning-gold);margin-right:6px}
-.pending-banner{display:none;align-items:center;gap:12px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.4);border-radius:14px;padding:12px 14px;margin-bottom:10px;cursor:pointer;color:#bae6fd}
-.pending-banner.show{display:flex}
-.pending-banner i:first-child{font-size:1.3rem;color:var(--info-blue);flex-shrink:0}
-.pending-banner .pb-text{flex:1;font-size:0.83rem;line-height:1.35}
-.pending-banner .pb-text strong{display:block;font-size:0.92rem;margin-bottom:2px;color:#e0f2fe}
-.pay-details{background:var(--input-bg);border:1px solid var(--card-border);border-radius:12px;padding:16px;margin-bottom:16px}
-.pay-details .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--card-border);font-size:0.9rem}
-.pay-details .row:last-child{border-bottom:none}
-.pay-details .row .lbl{color:var(--text-muted)}
-.pay-details .row .val{font-weight:700}
-.pay-details .row .val.copy{cursor:pointer;color:var(--accent-pill)}
-.pay-details .row .val.copy:hover{text-decoration:underline}
-.pf-label{font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:6px;display:block}
-.pf-input{width:100%;padding:12px 14px;background:var(--input-bg);border:1px solid var(--card-border);border-radius:10px;color:var(--text-main);font-size:0.95rem;outline:none;margin-bottom:14px;transition:all 0.2s}
-.pf-input:focus{border-color:var(--accent-purple);box-shadow:0 0 0 3px var(--accent-glow)}
-.pf-input.invalid{border-color:var(--danger-red)}
-.pending-icon{width:80px;height:80px;border-radius:50%;background:rgba(56,189,248,0.15);display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:var(--info-blue);margin:0 auto 18px;animation:pulse-soft 2.5s infinite}
-@keyframes pulse-soft{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(56,189,248,0.4)}50%{transform:scale(1.03);box-shadow:0 0 0 16px rgba(56,189,248,0)}}
-.sub-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:10px;font-size:0.8rem;font-weight:700;margin-top:8px}
-.sub-badge.free_trial{background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:var(--info-blue)}
-.sub-badge.active{background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:var(--success-green)}
-.sub-badge.pending_approval{background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--warning-gold)}
-.sub-badge.expired,.sub-badge.inactive{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:var(--danger-red)}
 .search-page{display:none}
 .search-page-header{position:relative;background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:10px 16px;margin-bottom:12px}
 .search-wrapper{display:flex;align-items:center;gap:12px}
@@ -234,7 +195,7 @@ body.player-open .bottom-nav{display:none}
 .movie-sub{font-size:0.68rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .category-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
 .category-grid .movie-card{min-width:100%;max-width:100%}
-.category-view,.details-page,.chat-page,.profile-page,.settings-page,.mylist-page,.about-page,.search-page,.plans-page,.payment-page,.pending-page{display:none}
+.category-view,.details-page,.chat-page,.profile-page,.settings-page,.mylist-page,.about-page,.search-page{display:none}
 .back-nav{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer;font-size:0.88rem;font-weight:600;background:rgba(21,20,30,0.8);border:1px solid var(--card-border);padding:8px 14px;border-radius:10px}
 .details-page{background:var(--bg-color);min-height:100vh;padding-bottom:60px}
 .details-loading{position:fixed;inset:0;background:var(--bg-color);z-index:300;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px}
@@ -348,8 +309,6 @@ select.filter-chip{color:var(--text-main)}
 .divider-text::before,.divider-text::after{content:'';position:absolute;top:50%;width:35%;height:1px;background:var(--card-border)}
 .divider-text::before{left:0}.divider-text::after{right:0}
 .linked-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.35);color:var(--success-green);padding:4px 10px;border-radius:8px;font-size:0.78rem;font-weight:700;margin-bottom:10px}
-.btn-plan-select{background:var(--accent-purple);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-weight:700;font-size:0.85rem;cursor:pointer;white-space:nowrap}
-.btn-plan-select:hover{background:var(--accent-hover)}
 .skeleton{background:linear-gradient(90deg,#191724 25%,#2a2739 37%,#191724 63%);background-size:200% 100%;animation:shimmer 1.6s infinite linear;border-radius:6px}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 .skeleton-card{min-width:120px;max-width:120px;flex-shrink:0;display:flex;flex-direction:column;gap:8px}
@@ -410,10 +369,6 @@ select.filter-chip{color:var(--text-main)}
   .nav-item:hover{background:rgba(255,255,255,0.05)}
   .nav-badge{position:static;margin-left:2px;top:auto;right:auto}
 
-  /* --- Paywall / plans --- */
-  #paywallOverlay{padding:56px 24px 56px}
-  .pw-card{max-width:560px}
-
   /* --- Hero --- */
   .hero-banner{min-height:400px;border-radius:18px}
   .hero-banner::before{border-radius:18px}
@@ -473,8 +428,7 @@ select.filter-chip{color:var(--text-main)}
 
   /* --- Chat / profile / settings --- */
   .chat-container{height:calc(100vh - var(--nav-h) - 140px);max-width:900px;margin:0 auto}
-  .profile-page,.settings-page,.about-page,.mylist-page,.plans-page,.payment-page,.pending-page,.search-page{max-width:980px;margin:0 auto}
-  .plans-page .pw-card,.payment-page .pw-card,.pending-page .pw-card{max-width:640px}
+  .profile-page,.settings-page,.about-page,.mylist-page,.search-page{max-width:980px;margin:0 auto}
 
   /* --- Floating UI --- */
   .toast-container{bottom:32px}
@@ -608,28 +562,7 @@ select.filter-chip{color:var(--text-main)}
   <div class="dp-actions"><button class="btn btn-ghost btn-sm" onclick="cancelDownload()">Cancel</button></div>
 </div>
 
-<div id="paywallOverlay">
-  <div class="pw-card">
-    <div class="pw-icon"><i class="fa-solid fa-crown"></i></div>
-    <div class="pw-title" id="pwTitle">Unlock KaziFlix</div>
-    <div class="pw-sub" id="pwSub">Choose a plan to continue streaming</div>
-    <div class="plan-list" id="planList"></div>
-    <div class="pw-notice">
-      <i class="fa-solid fa-circle-info"></i>
-      <strong>Payment may take 10 to 30 minutes for approval.</strong> Please do not make multiple payments while waiting. If it takes longer, call or WhatsApp me on <strong>0707340608</strong>.
-    </div>
-    <div style="text-align:center;margin-top:10px">
-      <button class="btn btn-ghost btn-sm" onclick="signOutUser()" style="font-size:0.78rem"><i class="fa-solid fa-right-from-bracket"></i> Switch account</button>
-    </div>
-  </div>
-</div>
-
 <div id="homePage">
-  <div id="pendingBanner" class="pending-banner" onclick="switchNavTab('pending')">
-    <i class="fa-solid fa-hourglass-half"></i>
-    <div class="pb-text"><strong>Payment under review</strong>We'll activate your plan shortly. Tap to view status.</div>
-    <i class="fa-solid fa-chevron-right" style="color:var(--info-blue)"></i>
-  </div>
   <div class="hero-container" id="heroContainer"></div>
   <div id="recentlyWatchedSection"></div>
   <div id="vjSection"></div>
@@ -670,69 +603,6 @@ select.filter-chip{color:var(--text-main)}
   </div>
 </div>
 
-<div id="plansPage" class="plans-page">
-  <div class="back-nav" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i><span>Back</span></div>
-  <div class="pw-card" style="margin-top:0">
-    <div class="pw-icon"><i class="fa-solid fa-crown"></i></div>
-    <div class="pw-title">Choose Your Plan</div>
-    <div class="pw-sub" id="plansPageSub">Upgrade to unlock all content</div>
-    <div class="plan-list" id="plansPageList"></div>
-  </div>
-</div>
-
-<div id="paymentPage" class="payment-page">
-  <div class="back-nav" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i><span>Back to plans</span></div>
-  <div class="pw-card" style="margin-top:0">
-    <div class="pw-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
-    <div class="pw-title">Complete Payment</div>
-    <div class="pw-sub">Send the exact amount via Mobile Money, then submit the form below.</div>
-    <div class="pay-details">
-      <div style="font-weight:700;margin-bottom:10px;font-size:0.95rem"><i class="fa-solid fa-arrow-right-to-bracket" style="color:var(--accent-pill)"></i> Send payment to:</div>
-      <div class="row"><span class="lbl">Network</span><span class="val">Airtel Money / Mobile Money</span></div>
-      <div class="row"><span class="lbl">Phone Number</span><span class="val copy" onclick="copyText('0707340608')">0707340608 <i class="fa-solid fa-copy" style="font-size:0.75rem"></i></span></div>
-      <div class="row"><span class="lbl">Registered Name</span><span class="val">Laila</span></div>
-      <div class="row"><span class="lbl">Plan</span><span class="val" id="pfPlanName">—</span></div>
-      <div class="row"><span class="lbl">Amount</span><span class="val" style="color:var(--success-green)">UGX <span id="pfAmount">0</span></span></div>
-    </div>
-    <div class="pw-notice">
-      <i class="fa-solid fa-circle-info"></i>
-      Payment may take 10 to 30 minutes for approval. Please do not make multiple payments while waiting. If it takes longer, call or WhatsApp me on <strong>0707340608</strong>.
-    </div>
-    <form id="paymentForm" onsubmit="submitPayment(event)">
-      <label class="pf-label">Your name (the name that appears on the payment)</label>
-      <input type="text" id="pfSenderName" class="pf-input" placeholder="e.g. John Doe" required />
-      <label class="pf-label">Phone number you paid from</label>
-      <input type="tel" id="pfPhone" class="pf-input" placeholder="e.g. 0700123456" required />
-      <label class="pf-label">Transaction ID / SMS Code</label>
-      <input type="text" id="pfTxn" class="pf-input" placeholder="e.g. MP240123.1234.A12345" required />
-      <button type="submit" class="btn" style="width:100%;padding:14px;font-size:1rem" id="pfSubmitBtn"><i class="fa-solid fa-paper-plane"></i> Submit Payment</button>
-    </form>
-  </div>
-</div>
-
-<div id="pendingPage" class="pending-page">
-  <div class="back-nav" onclick="switchNavTab('home')"><i class="fa-solid fa-arrow-left"></i><span>Back to home</span></div>
-  <div class="pw-card" style="margin-top:0;text-align:center">
-    <div class="pending-icon"><i class="fa-solid fa-hourglass-half"></i></div>
-    <div class="pw-title">Payment Under Review</div>
-    <div class="pw-sub">Your payment has been submitted successfully. Our team will verify it and activate your plan shortly.</div>
-    <div class="pay-details" style="text-align:left">
-      <div class="row"><span class="lbl">Plan</span><span class="val" id="pendingPlan">—</span></div>
-      <div class="row"><span class="lbl">Amount</span><span class="val" style="color:var(--success-green)">UGX <span id="pendingAmount">0</span></span></div>
-      <div class="row"><span class="lbl">Transaction ID</span><span class="val" id="pendingTxn" style="font-family:monospace;font-size:0.85rem">—</span></div>
-      <div class="row"><span class="lbl">Submitted</span><span class="val" id="pendingDate" style="font-size:0.85rem">—</span></div>
-    </div>
-    <div class="pw-notice" style="text-align:left">
-      <i class="fa-solid fa-circle-info"></i>
-      Payment may take 10 to 30 minutes for approval. Please do not make multiple payments while waiting. If it takes longer, call or WhatsApp me on <strong>0707340608</strong>.
-    </div>
-    <div class="btn-container">
-      <a class="btn" style="text-decoration:none" href="https://wa.me/256707340608" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp Us</a>
-      <a class="btn btn-ghost" style="text-decoration:none" href="tel:0707340608"><i class="fa-solid fa-phone"></i> Call</a>
-    </div>
-  </div>
-</div>
-
 <div id="profilePage" class="profile-page">
   <div class="section-header" style="margin-top:0"><div class="section-title"><div class="title-pill"></div><span>Profile</span></div></div>
   <div id="guestProfileCard" class="guest-prompt" style="display:none">
@@ -751,7 +621,6 @@ select.filter-chip{color:var(--text-main)}
       <input type="text" id="profileNameInput" class="profile-name-input" placeholder="Your display name" maxlength="24"/>
       <div class="profile-name-hint">Tap avatar to change • name is visible in chat</div>
       <div class="profile-email" id="profileEmailDisplay">—</div>
-      <div id="profileSubBadge"></div>
     </div>
     <div class="profile-section-box">
       <div style="font-weight:700;font-size:0.95rem;margin-bottom:10px"><i class="fa-solid fa-chart-pie"></i> App Stats</div>
@@ -760,7 +629,6 @@ select.filter-chip{color:var(--text-main)}
     </div>
   </div>
   <div class="profile-section-box">
-    <div class="profile-row" onclick="switchNavTab('plans')"><span class="label"><i class="fa-solid fa-crown" style="color:var(--warning-gold)"></i> Subscription</span><span class="chev"><i class="fa-solid fa-chevron-right"></i></span></div>
     <div class="profile-row" onclick="switchNavTab('settings')"><span class="label"><i class="fa-solid fa-gear"></i> Settings</span><span class="chev"><i class="fa-solid fa-chevron-right"></i></span></div>
     <div class="profile-row" onclick="switchNavTab('about')"><span class="label"><i class="fa-solid fa-circle-info"></i> About</span><span class="chev"><i class="fa-solid fa-chevron-right"></i></span></div>
     <div class="profile-row" onclick="clearLocalData()"><span class="label"><i class="fa-solid fa-broom"></i> Clear local cache</span><span class="chev"><i class="fa-solid fa-chevron-right"></i></span></div>
@@ -897,7 +765,6 @@ const APP_VERSION = "2.5.0";
 const firebaseConfig = { apiKey: "AIzaSyBi5HpJk44IZ--1cEyFmtzzIyqXr1RA2tM", authDomain: "movie-stream-app-47208.firebaseapp.com", projectId: "movie-stream-app-47208", storageBucket: "movie-stream-app-47208.firebasestorage.app", messagingSenderId: "686067092261", appId: "1:686067092261:web:f0a44cb0a399148be8a8cc", measurementId: "G-WJTDKVDM3V" };
 const TMDB_API_KEY = "606244727cc3260bba3eda2c1f123004";
 
-const PLANS = { free: { id: 'free', name: 'Free Trial', days: 2, price: 0, currency: 'UGX', label: 'Free' }, daily: { id: 'daily', name: 'Daily', days: 1, price: 500, currency: 'UGX', label: '1 Day' }, '3day': { id: '3day', name: '3-Day', days: 3, price: 1500, currency: 'UGX', label: '3 Days' }, weekly: { id: 'weekly', name: 'Weekly', days: 7, price: 3500, currency: 'UGX', label: '7 Days' }, '2week': { id: '2week', name: '2-Week', days: 14, price: 7000, currency: 'UGX', label: '14 Days' } };
 const AVATAR_STYLES = ['adventurer','avataaars','big-ears','bottts','croodles','fun-emoji','micah','miniavs','open-peeps','personas','pixel-art','thumbs'];
 const AVATAR_BG_COLORS = 'b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf,c7f9cc,fce4c9';
 
@@ -934,9 +801,6 @@ const lsDel = (k) => { try { localStorage.removeItem(k); } catch {} };
 function tsToMs(ts) { if (!ts) return 0; if (ts.toMillis) return ts.toMillis(); if (ts.toDate) return ts.toDate().getTime(); if (typeof ts === 'number') return ts; if (typeof ts === 'string') { const d = new Date(ts); return isNaN(d) ? 0 : d.getTime(); } return 0; }
 function formatTime(seconds) { if (!seconds || isNaN(seconds) || seconds < 0) return "0:00"; const h = Math.floor(seconds / 3600), m = Math.floor((seconds % 3600) / 60), s = Math.floor(seconds % 60); if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; return `${m}:${String(s).padStart(2,'0')}`; }
 function timeAgo(ts) { const d = ts?.toDate ? ts.toDate() : (ts?.toMillis ? new Date(ts.toMillis()) : null); if (!d) return ''; const diff = (Date.now() - d.getTime()) / 1000; if (diff < 60) return 'now'; if (diff < 3600) return Math.floor(diff/60) + 'm'; if (diff < 86400) return Math.floor(diff/3600) + 'h'; return Math.floor(diff/86400) + 'd'; }
-function formatCountdown(expiryMs) { const diff = expiryMs - Date.now(); if (diff <= 0) return 'Expired'; const days = Math.floor(diff / 86400000); const hours = Math.floor((diff % 86400000) / 3600000); const mins = Math.floor((diff % 3600000) / 60000); if (days > 0) return `${days}d ${hours}h`; if (hours > 0) return `${hours}h ${mins}m`; return `${mins}m`; }
-function computeUserStatus(userData) { if (!userData) return 'guest'; const now = Date.now(); const status = userData.subscriptionStatus; if (status === 'pending_approval') return 'pending_approval'; if (status === 'inactive') return 'inactive'; if (status === 'active' || userData.isVip) { const exp = tsToMs(userData.subscriptionExpiry); if (exp > now) return 'active'; return 'expired'; } const trial = tsToMs(userData.trialExpiry); if (trial > now) return 'free_trial'; return 'expired'; }
-function getUserExpiry(userData) { if (!userData) return 0; const status = userData.subscriptionStatus || ''; if (status === 'active' || userData.isVip) { const vip = tsToMs(userData.subscriptionExpiry); if (vip) return vip; } const trial = tsToMs(userData.trialExpiry); return trial; }
 function getLatestProgress(movieId) { if (movieProgress[movieId]) return { key: movieId, data: movieProgress[movieId] }; const epKeys = Object.keys(movieProgress).filter(k => k.startsWith(movieId + '_')); if (!epKeys.length) return null; let best = null; for (const k of epKeys) { const d = movieProgress[k]; if (!d) continue; if (!best || (d.updatedAt || 0) > (best.data.updatedAt || 0)) best = { key: k, data: d }; } return best; }
 function getProgressPct(prog) { if (!prog || !prog.duration || !prog.currentTime) return 0; return Math.max(0, Math.min(100, (prog.currentTime / prog.duration) * 100)); }
 function formatEpisodeLabel(key) { const m = key.match(/_s_(\d+)_ep_(\d+)/); if (m) return `S${+m[1]+1} · E${+m[2]+1}`; const ep = key.match(/_ep_(\d+)/); if (ep) return `E${+ep[1]+1}`; return null; }
@@ -958,11 +822,7 @@ window.shuffleAvatars = () => { currentAvatarSeed = Math.random().toString(36).s
 
 let userUid = null;
 let userData = {};
-let userSubStatus = 'guest';
-let userSubExpiry = 0;
-let pendingPayment = null;
 let userUnsubscribe = null;
-let lastAppliedStatus = 'guest';
 let authMode = 'signin';
 let authModalAction = null;
 let profileSetupShownThisSession = false;
@@ -970,7 +830,7 @@ let profileSetupShownThisSession = false;
 getRedirectResult(auth).catch(err => { if (err?.code) console.warn('Redirect result error:', err.code); });
 
 onAuthStateChanged(auth, async (u) => {
-  if (!u) { userUid = null; userData = {}; userSubStatus = 'guest'; userSubExpiry = 0; profileSetupShownThisSession = false; if (userUnsubscribe) { userUnsubscribe(); userUnsubscribe = null; } applySubscriptionState(); updateProfileUI(); refreshAuthUI(); return; }
+  if (!u) { userUid = null; userData = {}; profileSetupShownThisSession = false; if (userUnsubscribe) { userUnsubscribe(); userUnsubscribe = null; } updateProfileUI(); refreshAuthUI(); return; }
   userUid = u.uid;
   document.getElementById("aboutUid").innerText = userUid;
   if (u.displayName) lsSet("kz_name", u.displayName);
@@ -978,7 +838,7 @@ onAuthStateChanged(auth, async (u) => {
   await mergeGuestDataIntoAccount(u.uid);
   try { const freshSnap = await getDoc(doc(db, 'users', userUid)); if (freshSnap.exists()) userData = freshSnap.data(); } catch {}
   if (userUnsubscribe) userUnsubscribe();
-  userUnsubscribe = onSnapshot(doc(db, "users", userUid), (snap) => { if (snap.exists()) { userData = snap.data(); userSubStatus = computeUserStatus(userData); userSubExpiry = getUserExpiry(userData); applySubscriptionState(); updateProfileUI(); } });
+  userUnsubscribe = onSnapshot(doc(db, "users", userUid), (snap) => { if (snap.exists()) { userData = snap.data(); updateProfileUI(); } });
   await loadUserProgressAndLikes(userUid);
   refreshCardsWithProgress(); updateProfileUI(); refreshAuthUI();
   const modal = document.getElementById('authModal');
@@ -988,7 +848,7 @@ onAuthStateChanged(auth, async (u) => {
   if (needsSetup && !profileSetupShownThisSession) { profileSetupShownThisSession = true; setTimeout(() => { if (document.getElementById('authModal')?.classList.contains('active')) return; if (document.getElementById('profileSetupModal')?.classList.contains('active')) return; openProfileSetup(); }, wasAuthModalOpen ? 900 : 500); }
 });
 
-async function ensureUserDoc(u) { const ref = doc(db, "users", u.uid); try { const snap = await getDoc(ref); if (!snap.exists()) { const trialExpiry = new Date(Date.now() + PLANS.free.days * 86400000); await setDoc(ref, { uid: u.uid, displayName: u.displayName || '', email: u.email || '', subscriptionStatus: 'free_trial', subscriptionPlan: 'free', subscriptionPlanName: 'Free Trial', trialExpiry, isVip: false, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }); } else { const data = snap.data(); const patch = {}; if (!data.email && u.email) patch.email = u.email; if (!data.displayName && u.displayName) patch.displayName = u.displayName; const status = computeUserStatus(data); if (status === 'expired' && data.subscriptionStatus !== 'expired' && data.subscriptionStatus !== 'pending_approval') { patch.subscriptionStatus = 'expired'; patch.isVip = false; } if (Object.keys(patch).length) { patch.updatedAt = serverTimestamp(); await updateDoc(ref, patch); } } } catch (e) {} }
+async function ensureUserDoc(u) { const ref = doc(db, "users", u.uid); try { const snap = await getDoc(ref); if (!snap.exists()) { await setDoc(ref, { uid: u.uid, displayName: u.displayName || '', email: u.email || '', createdAt: serverTimestamp(), updatedAt: serverTimestamp() }); } else { const data = snap.data(); const patch = {}; if (!data.email && u.email) patch.email = u.email; if (!data.displayName && u.displayName) patch.displayName = u.displayName; if (Object.keys(patch).length) { patch.updatedAt = serverTimestamp(); await updateDoc(ref, patch); } } } catch (e) {} }
 
 async function mergeGuestDataIntoAccount(uid) { try { const localProgress = lsGet('movieProgress', {}); const localLikes = lsGet('likedMovies', []); if (!Object.keys(localProgress).length && !localLikes.length) return; const ref = doc(db, 'users', uid); const snap = await getDoc(ref); const existing = snap.exists() ? snap.data() : {}; const serverProgress = existing.progress || {}; const serverLikes = new Set(existing.likes || []); const merged = { ...serverProgress }; for (const k of Object.keys(localProgress)) { const lp = localProgress[k], sp = merged[k]; if (!sp || (lp?.updatedAt || 0) > (sp?.updatedAt || 0)) merged[k] = lp; } localLikes.forEach(id => serverLikes.add(id)); await setDoc(ref, { progress: merged, likes: [...serverLikes] }, { merge: true }); movieProgress = merged; likedMovieIds = [...serverLikes]; lsSet('movieProgress', movieProgress); lsSet('likedMovies', likedMovieIds); } catch (e) {} }
 
@@ -1014,20 +874,8 @@ window.openProfileSetup = () => { if (!userUid) { openAuthModal('set up your pro
 window.closeProfileSetup = () => { document.getElementById('profileSetupModal').classList.remove('active'); maybeUnlockBodyScroll(); };
 window.saveProfileSetup = async () => { if (!userUid) return; const name = document.getElementById('setupNameInput').value.trim().slice(0, 24); if (!name) { showToast('Please enter a name', 'fa-circle-exclamation'); return; } if (!selectedAvatarUrl) { showToast('Please pick an avatar', 'fa-circle-exclamation'); return; } const btn = document.getElementById('profileSetupSaveBtn'); btn.disabled = true; const origText = btn.textContent; btn.textContent = 'Saving…'; try { await updateDoc(doc(db, 'users', userUid), { displayName: name, avatarUrl: selectedAvatarUrl, profileCompleted: true, updatedAt: serverTimestamp() }); try { if (auth.currentUser) await updateProfile(auth.currentUser, { displayName: name }); } catch {} lsSet('kz_name', name); showToast('Profile saved', 'fa-circle-check'); closeProfileSetup(); } catch (e) { showToast('Save failed: ' + e.message, 'fa-circle-exclamation'); } finally { btn.disabled = false; btn.textContent = origText; } };
 
-function applySubscriptionState() { const paywall = document.getElementById("paywallOverlay"); const pendingBanner = document.getElementById("pendingBanner"); if (!userUid) { paywall.classList.remove('active'); pendingBanner.classList.remove('show'); lastAppliedStatus = 'guest'; updateSubBadge(); updatePendingPage(); return; } const isActive = userSubStatus === 'active' || userSubStatus === 'free_trial'; const isPending = userSubStatus === 'pending_approval'; const wasPending = lastAppliedStatus === 'pending_approval'; if (isActive) { paywall.classList.remove('active'); pendingBanner.classList.remove('show'); } else if (isPending) { paywall.classList.remove('active'); pendingBanner.classList.add('show'); if (!wasPending) switchNavTab('pending'); } else { const onPaymentFlow = document.getElementById('paymentPage').style.display === 'block' || document.getElementById('plansPage').style.display === 'block'; if (!onPaymentFlow) paywall.classList.add('active'); pendingBanner.classList.remove('show'); renderPlanList('planList'); document.getElementById("pwTitle").textContent = userSubStatus === 'expired' ? "Your subscription has expired" : "Unlock KaziFlix"; document.getElementById("pwSub").textContent = userSubStatus === 'expired' ? "Choose a plan to continue streaming" : "Choose a plan to start watching"; } lastAppliedStatus = userSubStatus; updateProfileUI(); updateSubBadge(); updatePendingPage(); }
-function updateSubBadge() { const badge = document.getElementById("profileSubBadge"); if (!badge) return; const status = userSubStatus; if (status === 'guest') { badge.innerHTML = ''; return; } const labels = { free_trial: 'Free Trial', active: 'Active VIP', pending_approval: 'Pending Approval', expired: 'Expired', inactive: 'Inactive' }; const icons = { free_trial: 'fa-hourglass-half', active: 'fa-crown', pending_approval: 'fa-clock', expired: 'fa-circle-xmark', inactive: 'fa-circle-xmark' }; let countdown = ''; if ((status === 'active' || status === 'free_trial') && userSubExpiry > 0) countdown = ' · ' + formatCountdown(userSubExpiry) + ' left'; const icon = icons[status] || 'fa-circle-info'; const label = labels[status] || status; badge.innerHTML = `<span class="sub-badge ${status}"><i class="fa-solid ${icon}"></i> ${label}${countdown}</span>`; }
-function renderPlanList(containerId) { const container = document.getElementById(containerId); if (!container) return; const plans = ['daily', '3day', 'weekly', '2week']; container.innerHTML = plans.map(id => { const p = PLANS[id]; const featured = id === 'weekly'; return `<div class="plan-item ${featured ? 'featured' : ''}" onclick="choosePlan('${id}')"><div><div class="name">${esc(p.name)}${featured ? ' ⭐' : ''}</div><div class="duration">${esc(p.label)}${featured ? ' · Best Value' : ''}</div></div><div style="display:flex;align-items:center;gap:12px"><div class="price">UGX ${p.price.toLocaleString()}<small>${p.days}d access</small></div><button class="btn-plan-select" onclick="event.stopPropagation();choosePlan('${id}')">Select</button></div></div>`; }).join(''); }
-
-window.choosePlan = (planId) => { if (!PLANS[planId]) return; requireAuth('subscribe', () => { document.getElementById('paywallOverlay').classList.remove('active'); switchNavTab('payment'); renderPaymentPage(planId); }); };
-
-const viewMap = { home: 'homePage', search: 'searchPage', chat: 'chatPage', profile: 'profilePage', settings: 'settingsPage', about: 'aboutPage', mylist: 'mylistPage', plans: 'plansPage', payment: 'paymentPage', pending: 'pendingPage' };
-window.switchNavTab = (tabName, fromRoute = false) => { resetPlayer(); document.body.classList.remove("details-active"); document.body.classList.remove("player-open"); Object.values(viewMap).forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; }); document.getElementById("categoryView").style.display = "none"; document.getElementById("detailsPage").style.display = "none"; document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active")); const btnMap = { home: 'navHomeBtn', search: 'navSearchBtn', chat: 'navChatBtn', mylist: 'navMylistBtn', profile: 'navProfileBtn' }; if (btnMap[tabName]) document.getElementById(btnMap[tabName]).classList.add("active"); if (viewMap[tabName]) document.getElementById(viewMap[tabName]).style.display = 'block'; if (tabName === 'payment' || tabName === 'plans') { document.getElementById('paywallOverlay').classList.remove('active'); } if (tabName === 'chat') { initChatListener(); scrollChatBottom(true); markChatRead(); } if (tabName === 'profile') updateProfileUI(); if (tabName === 'mylist') renderMyList(); if (tabName === 'settings') { refreshSettingUI(); refreshAuthUI(); } if (tabName === 'about') { document.getElementById('aboutInstalledVersion').textContent = APP_VERSION; document.getElementById('aboutAvailableVersion').textContent = currentUpdateData?.version || '—'; } if (tabName === 'search') setTimeout(() => document.getElementById('searchInput').focus(), 100); if (tabName === 'plans') { document.getElementById("plansPageSub").textContent = userSubStatus === 'active' ? `You're on ${userData.subscriptionPlanName || 'Active VIP'} — extend anytime` : 'Upgrade to unlock all content'; renderPlanList('plansPageList'); } if (tabName === 'pending') updatePendingPage(); if (!fromRoute) pushRoute('/' + tabName); window.scrollTo({ top: 0, behavior: "smooth" }); enhanceScrollRows(); };
-
-function renderPaymentPage(planId) { const plan = PLANS[planId]; if (!plan) return; document.getElementById("pfPlanName").textContent = `${plan.name} (${plan.label})`; document.getElementById("pfAmount").textContent = plan.price.toLocaleString(); document.getElementById("paymentForm").dataset.planId = planId; document.getElementById("pfSenderName").value = userData.displayName || ''; document.getElementById("pfPhone").value = userData.phone || ''; document.getElementById("pfTxn").value = ''; }
-
-window.submitPayment = async (e) => { e.preventDefault(); if (!userUid) { showToast("Please sign in first", "fa-circle-exclamation"); openAuthModal('submit payment', () => {}); return; } const planId = document.getElementById("paymentForm").dataset.planId; const plan = PLANS[planId]; if (!plan) { showToast("Invalid plan", "fa-circle-exclamation"); return; } const senderName = document.getElementById("pfSenderName").value.trim(); const phoneUsed = document.getElementById("pfPhone").value.trim(); const transactionId = document.getElementById("pfTxn").value.trim(); if (!senderName || !phoneUsed || !transactionId) { showToast("All fields are required", "fa-circle-exclamation"); return; } const btn = document.getElementById("pfSubmitBtn"); btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Submitting…`; try { const dupSnap = await getDocs(query(collection(db, "pending_payments"), where("transactionId", "==", transactionId))); if (!dupSnap.empty) { showToast("This transaction ID has already been submitted", "fa-circle-exclamation"); btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Submit Payment`; return; } const userAllSnap = await getDocs(query(collection(db, "pending_payments"), where("uid", "==", userUid))); const hasPending = userAllSnap.docs.some(d => (d.data().status || 'pending') === 'pending'); if (hasPending) { showToast("You already have a pending payment awaiting approval", "fa-circle-exclamation"); btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Submit Payment`; switchNavTab('pending'); return; } await addDoc(collection(db, "pending_payments"), { uid: userUid, userName: userData.displayName || 'User_' + userUid.substring(0, 6), userEmail: userData.email || '', phoneUsed, senderName, transactionId, planId: plan.id, planName: plan.name, planDays: plan.days, amount: plan.price, currency: plan.currency, status: 'pending', createdAt: serverTimestamp() }); await updateDoc(doc(db, "users", userUid), { subscriptionStatus: 'pending_approval', pendingPlanId: plan.id, pendingTransactionId: transactionId, pendingSince: serverTimestamp(), phone: phoneUsed, updatedAt: serverTimestamp() }); showToast("Payment submitted — awaiting approval", "fa-circle-check"); switchNavTab('pending'); } catch (err) { showToast("Submit failed: " + err.message, "fa-circle-exclamation"); } finally { btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Submit Payment`; } };
-
-async function updatePendingPage() { if (!userUid || userSubStatus !== 'pending_approval') return; try { const snap = await getDocs(query(collection(db, "pending_payments"), where("uid", "==", userUid))); const pending = snap.docs.find(d => (d.data().status || 'pending') === 'pending'); if (pending) { const p = { id: pending.id, ...pending.data() }; pendingPayment = p; document.getElementById("pendingPlan").textContent = p.planName || p.planId; document.getElementById("pendingAmount").textContent = Number(p.amount || 0).toLocaleString(); document.getElementById("pendingTxn").textContent = p.transactionId || '—'; document.getElementById("pendingDate").textContent = p.createdAt?.toDate ? p.createdAt.toDate().toLocaleString() : '—'; } } catch (e) {} }
+const viewMap = { home: 'homePage', search: 'searchPage', chat: 'chatPage', profile: 'profilePage', settings: 'settingsPage', about: 'aboutPage', mylist: 'mylistPage' };
+window.switchNavTab = (tabName, fromRoute = false) => { resetPlayer(); document.body.classList.remove("details-active"); document.body.classList.remove("player-open"); Object.values(viewMap).forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; }); document.getElementById("categoryView").style.display = "none"; document.getElementById("detailsPage").style.display = "none"; document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active")); const btnMap = { home: 'navHomeBtn', search: 'navSearchBtn', chat: 'navChatBtn', mylist: 'navMylistBtn', profile: 'navProfileBtn' }; if (btnMap[tabName]) document.getElementById(btnMap[tabName]).classList.add("active"); if (viewMap[tabName]) document.getElementById(viewMap[tabName]).style.display = 'block'; if (tabName === 'chat') { initChatListener(); scrollChatBottom(true); markChatRead(); } if (tabName === 'profile') updateProfileUI(); if (tabName === 'mylist') renderMyList(); if (tabName === 'settings') { refreshSettingUI(); refreshAuthUI(); } if (tabName === 'about') { document.getElementById('aboutInstalledVersion').textContent = APP_VERSION; document.getElementById('aboutAvailableVersion').textContent = currentUpdateData?.version || '—'; } if (tabName === 'search') setTimeout(() => document.getElementById('searchInput').focus(), 100); if (!fromRoute) pushRoute('/' + tabName); window.scrollTo({ top: 0, behavior: "smooth" }); enhanceScrollRows(); };
 
 let progressPersistQueue = {};
 let progressPersistTimer = null;
@@ -1078,7 +926,7 @@ window.addEventListener("popstate", () => {
   handleRoute();
 });
 
-function handleRoute() { const h = location.hash.replace(/^#/, ""); const updateModal = document.getElementById("updateModalOverlay"); if (updateModal.classList.contains("active")) { updateModal.classList.remove("active"); return; } window.scrollTo(0, 0); if (h.startsWith("/movie/")) loadMovieDetailsById(decodeURIComponent(h.split("/movie/")[1]), true); else if (h === "/chat") switchNavTab("chat", true); else if (h === "/profile") switchNavTab("profile", true); else if (h === "/settings") switchNavTab("settings", true); else if (h === "/about") switchNavTab("about", true); else if (h === "/mylist") switchNavTab("mylist", true); else if (h === "/search") switchNavTab("search", true); else if (h === "/plans") switchNavTab("plans", true); else if (h.startsWith("/payment/")) { const pid = decodeURIComponent(h.split("/payment/")[1]); switchNavTab("payment", true); renderPaymentPage(pid); } else if (h === "/pending") switchNavTab("pending", true); else if (h.startsWith("/category/")) openCategoryView(decodeURIComponent(h.split("/category/")[1]), true); else if (h.startsWith("/genre/")) openGenreView(decodeURIComponent(h.split("/genre/")[1]), true); else if (h.startsWith("/vj/")) openVJView(decodeURIComponent(h.split("/vj/")[1]), true); else switchNavTab("home", true); }
+function handleRoute() { const h = location.hash.replace(/^#/, ""); const updateModal = document.getElementById("updateModalOverlay"); if (updateModal.classList.contains("active")) { updateModal.classList.remove("active"); return; } window.scrollTo(0, 0); if (h.startsWith("/movie/")) loadMovieDetailsById(decodeURIComponent(h.split("/movie/")[1]), true); else if (h === "/chat") switchNavTab("chat", true); else if (h === "/profile") switchNavTab("profile", true); else if (h === "/settings") switchNavTab("settings", true); else if (h === "/about") switchNavTab("about", true); else if (h === "/mylist") switchNavTab("mylist", true); else if (h === "/search") switchNavTab("search", true); else if (h.startsWith("/category/")) openCategoryView(decodeURIComponent(h.split("/category/")[1]), true); else if (h.startsWith("/genre/")) openGenreView(decodeURIComponent(h.split("/genre/")[1]), true); else if (h.startsWith("/vj/")) openVJView(decodeURIComponent(h.split("/vj/")[1]), true); else switchNavTab("home", true); }
 window.goBack = () => { if (history.length > 1) history.back(); else switchNavTab("home"); };
 
 function updateProfileUI() { const watchedEl = document.getElementById("profileWatchedCount"); const likesEl = document.getElementById("profileLikesCount"); if (watchedEl) watchedEl.innerText = recentlyWatchedIds.length; if (likesEl) likesEl.innerText = likedMovieIds.length; const avatarImg = document.getElementById("profileAvatarImg"); const initialEl = document.getElementById("profileInitial"); const displayName = userData.displayName || auth.currentUser?.displayName || (auth.currentUser?.email ? auth.currentUser.email.split('@')[0] : '') || 'U'; if (avatarImg && initialEl) { if (userData.avatarUrl) { avatarImg.src = userData.avatarUrl; avatarImg.style.display = 'block'; initialEl.style.display = 'none'; } else { avatarImg.style.display = 'none'; initialEl.style.display = 'block'; initialEl.innerText = displayName.charAt(0).toUpperCase(); } } const emailEl = document.getElementById("profileEmailDisplay"); if (emailEl) emailEl.innerText = userData.email || auth.currentUser?.email || '—'; }
@@ -1261,7 +1109,18 @@ function updateLikeUI() { if (!activeMovie) return; const liked = likedMovieIds.
 window.shareMovie = async () => { if (!activeMovie) return; const url = location.origin + location.pathname + '#/movie/' + activeMovie.id; try { if (navigator.share) await navigator.share({ title: activeMovie.title, text: `Watch ${activeMovie.title} on KaziFlix`, url }); else { await navigator.clipboard.writeText(url); showToast("Link copied"); } } catch {} };
 window.reportContent = async () => { if (!activeMovie) return; requireAuth('report content', async () => { if (reportedThisSession.has(activeMovie.id)) { showToast("Already reported"); return; } const reason = prompt("Report reason (optional):") ?? null; if (reason === null) return; reportedThisSession.add(activeMovie.id); try { await addDoc(collection(db, "reports"), { movieId: activeMovie.id, uid: userUid, reason: reason.slice(0, 200), createdAt: serverTimestamp() }); showToast("Report submitted"); } catch { reportedThisSession.delete(activeMovie.id); showToast("Failed to submit", "fa-circle-exclamation"); } }); };
 
-window.handleWatchNow = () => { requireAuth('watch this title', () => { try { if (window.AndroidInterface && typeof window.AndroidInterface.showRewardedAd === "function") { window.AndroidInterface.showRewardedAd(); } else { window.onAdRewarded(); } } catch (err) { window.onAdRewarded(); } }); };
+window.handleWatchNow = () => {
+  // Auth requirement removed for free access. Directly trigger the ad and play.
+  try {
+    if (window.AndroidInterface && typeof window.AndroidInterface.showRewardedAd === "function") {
+      window.AndroidInterface.showRewardedAd();
+    } else {
+      window.onAdRewarded();
+    }
+  } catch (err) {
+    window.onAdRewarded();
+  }
+};
 window.onAdRewarded = () => { startMovie(); };
 window.retryPlay = () => { startMovie(); };
 
@@ -1716,7 +1575,7 @@ loadInitialRoute();
 
 window.addEventListener('beforeunload', () => { try { lsSet("movieProgress", movieProgress); } catch {} });
 window.addEventListener('unhandledrejection', (e) => console.warn("Unhandled promise rejection:", e.reason));
-setInterval(() => { if (userUid && userData && Object.keys(userData).length) applySubscriptionState(); }, 60000);
+setInterval(() => { if (userUid && userData && Object.keys(userData).length) updateProfileUI(); }, 60000);
 </script>
 
 <!-- Adsterra Social Bar Script -->
