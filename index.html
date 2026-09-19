@@ -1527,30 +1527,10 @@ window.startMovie = () => {
   }
 
   if (isEmbed) {
-    if (hlsInstance) { try { hlsInstance.destroy(); } catch {} hlsInstance = null; }
-    try { video.pause(); } catch {}
-    try { video.removeAttribute("src"); video.load(); } catch {}
-    video.style.display = "none";
-    videoLoader.style.display = "flex";
-
-    iframe.style.display = "block";
-    const targetUrl = activeVideoUrl.trim();
-
-    if (iframe.dataset.currentSrc !== targetUrl) {
-      iframe.dataset.currentSrc = targetUrl;
-      iframe.src = "about:blank";
-      setTimeout(() => { iframe.src = targetUrl; }, 40);
-    } else {
-      videoLoader.style.display = "none";
-    }
-
-    let loaded = false;
-    iframe.onload = () => { loaded = true; videoLoader.style.display = "none"; };
-    iframe.onerror = () => { loaded = true; };
-    setTimeout(() => {
-      videoLoader.style.display = "none";
-      if (!loaded) showToast("If it doesn't load, close and try again", "fa-circle-info");
-    }, 7000);
+    // Redirect to new tab to protect user's main session from aggressive ads
+    window.open(activeVideoUrl, '_blank', 'noopener');
+    showToast('Movie opened in a new tab to protect your session', 'fa-external-link-alt');
+    doClosePlayer();
     return;
   }
 
