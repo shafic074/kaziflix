@@ -255,9 +255,12 @@ body.player-open .bottom-nav{display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .player-close-btn{position:absolute;top:calc(14px + env(safe-area-inset-top,0));left:14px;z-index:9500;background:rgba(11,10,16,0.85);color:#fff;border:2px solid rgba(255,255,255,0.3);width:52px;height:52px;border-radius:50%;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(14px);box-shadow:0 4px 16px rgba(0,0,0,0.5)}
 .player-close-btn:hover{background:rgba(124,58,237,0.7)}
+.open-new-tab-btn{position:absolute;top:calc(14px + env(safe-area-inset-top,0));right:14px;z-index:9500;background:rgba(11,10,16,0.85);color:#fff;border:2px solid rgba(255,255,255,0.3);padding:0 16px;height:52px;border-radius:26px;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;backdrop-filter:blur(14px);box-shadow:0 4px 16px rgba(0,0,0,0.5);text-decoration:none}
+.open-new-tab-btn:hover{background:rgba(124,58,237,0.7)}
 @media (orientation: portrait) and (max-width: 900px) {
   body.player-open #playerContainer { width: 100vh; height: 100vw; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(90deg); transform-origin: center center; }
   body.player-open #playerContainer .player-close-btn { transform: rotate(-90deg); }
+  body.player-open #playerContainer .open-new-tab-btn { transform: rotate(-90deg); }
   body.player-open #videoLoader { transform: rotate(-90deg); }
 }
 #rotateHint{position:fixed;inset:0;z-index:9600;background:rgba(0,0,0,0.92);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:#fff;text-align:center;padding:24px;pointer-events:none}
@@ -726,12 +729,12 @@ select.filter-chip{color:var(--text-main)}
         <p>For the best experience, turn your device sideways. This message will disappear automatically.</p>
       </div>
       <button class="player-close-btn" id="playerCloseBtn" onclick="closePlayer()" title="Close player"><i class="fa-solid fa-arrow-left"></i></button>
+      <a id="openNewTabBtn" class="open-new-tab-btn" href="#" target="_blank" rel="noopener noreferrer" style="display:none;"><i class="fa-solid fa-up-right-from-square"></i> Open in New Tab</a>
       <div id="videoLoader" class="video-loading-overlay" style="display: none;">
         <div class="spinner"></div>
         <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Loading Stream...</span>
       </div>
       <video id="html5VideoPlayer" controls playsinline preload="metadata" referrerpolicy="no-referrer" style="display: none;"></video>
-      <!-- SANDBOX ATTRIBUTE REMOVED so vidsrc.me can play -->
       <iframe id="embedVideoPlayer" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="origin" style="display: none;"></iframe>
     </div>
   </div>
@@ -1181,7 +1184,6 @@ window.shareMovie = async () => { if (!activeMovie) return; const url = location
 window.reportContent = async () => { if (!activeMovie) return; requireAuth('report content', async () => { if (reportedThisSession.has(activeMovie.id)) { showToast("Already reported"); return; } const reason = prompt("Report reason (optional):") ?? null; if (reason === null) return; reportedThisSession.add(activeMovie.id); try { await addDoc(collection(db, "reports"), { movieId: activeMovie.id, uid: userUid, reason: reason.slice(0, 200), createdAt: serverTimestamp() }); showToast("Report submitted"); } catch { reportedThisSession.delete(activeMovie.id); showToast("Failed to submit", "fa-circle-exclamation"); } }); };
 
 window.handleWatchNow = () => {
-  // Auth requirement removed for free access. Directly trigger the ad and play.
   try {
     if (window.AndroidInterface && typeof window.AndroidInterface.showRewardedAd === "function") {
       window.AndroidInterface.showRewardedAd();
@@ -1516,6 +1518,7 @@ window.startMovie = () => {
   const videoLoader = document.getElementById("videoLoader");
   const video = document.getElementById("html5VideoPlayer");
   const iframe = document.getElementById("embedVideoPlayer");
+  const openNewTabBtn = document.getElementById("openNewTabBtn");
 
   playerContainer.style.display = "block";
   document.body.classList.add("player-open");
@@ -1527,13 +1530,38 @@ window.startMovie = () => {
   }
 
   if (isEmbed) {
-    // Redirect to new tab to protect user's main session from aggressive ads
-    window.open(activeVideoUrl, '_blank', 'noopener');
-    showToast('Movie opened in a new tab to protect your session', 'fa-external-link-alt');
-    doClosePlayer();
+    if (hlsInstance) { try { hlsInstance.destroy(); } catch {} hlsInstance = null; }
+    try { video.pause(); } catch {}
+    try { video.removeAttribute("src"); video.load(); } catch {}
+    video.style.display = "none";
+    videoLoader.style.display = "flex";
+    
+    // Show the "Open in New Tab" button for embed players
+    openNewTabBtn.href = activeVideoUrl;
+    openNewTabBtn.style.display = "flex";
+
+    iframe.style.display = "block";
+    const targetUrl = activeVideoUrl.trim();
+
+    if (iframe.dataset.currentSrc !== targetUrl) {
+      iframe.dataset.currentSrc = targetUrl;
+      iframe.src = "about:blank";
+      setTimeout(() => { iframe.src = targetUrl; }, 40);
+    } else {
+      videoLoader.style.display = "none";
+    }
+
+    let loaded = false;
+    iframe.onload = () => { loaded = true; videoLoader.style.display = "none"; };
+    iframe.onerror = () => { loaded = true; };
+    setTimeout(() => {
+      videoLoader.style.display = "none";
+      if (!loaded) showToast("If it doesn't load, close and try again", "fa-circle-info");
+    }, 7000);
     return;
   }
 
+  openNewTabBtn.style.display = "none";
   resetPlayer();
   videoLoader.style.display = "flex";
 
