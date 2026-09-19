@@ -459,6 +459,15 @@ select.filter-chip{color:var(--text-main)}
   .nav-item i{font-size:1.05rem}
   .avatar-picker-grid{grid-template-columns:repeat(3,1fr)}
 }
+
+/* ===== SEO Facts Section Styles ===== */
+.facts-container{background:var(--input-bg);border:1px solid var(--card-border);border-radius:12px;padding:14px;margin-bottom:16px}
+.facts-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--card-border);font-size:0.88rem}
+.facts-row:last-child{border-bottom:none}
+.facts-row .lbl{color:var(--text-muted);font-weight:600}
+.facts-row .val{font-weight:700;text-align:right;max-width:60%;word-break:break-word}
+.legal-btn{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:12px 20px;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;margin-top:8px;width:100%;transition:transform 0.2s}
+.legal-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(16,185,129,0.4)}
 </style>
 </head>
 <body>
@@ -722,6 +731,7 @@ select.filter-chip{color:var(--text-main)}
         <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Loading Stream...</span>
       </div>
       <video id="html5VideoPlayer" controls playsinline preload="metadata" referrerpolicy="no-referrer" style="display: none;"></video>
+      <!-- SANDBOX ATTRIBUTE REMOVED so vidsrc.me can play -->
       <iframe id="embedVideoPlayer" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="origin" style="display: none;"></iframe>
     </div>
   </div>
@@ -733,6 +743,25 @@ select.filter-chip{color:var(--text-main)}
       <a class="btn-action-secondary" href="#" onclick="handleDownloadClick(event)"><i class="fa-solid fa-download"></i> <span id="downloadSizeLabel">Download</span></a>
     </div>
     <p id="detailDesc" class="details-desc-text"></p>
+
+    <!-- SEO FACTS SECTION -->
+    <div id="factsSection" style="display:none;margin-bottom:16px">
+      <div class="tmdb-section-title" style="font-size:1rem">Facts & Details</div>
+      <div class="facts-container">
+        <div class="facts-row" id="factDirectorRow" style="display:none"><span class="lbl">Director</span><span class="val" id="detailDirector">—</span></div>
+        <div class="facts-row" id="factCastRow" style="display:none"><span class="lbl">Cast</span><span class="val" id="detailCast">—</span></div>
+        <div class="facts-row" id="factRuntimeRow" style="display:none"><span class="lbl">Runtime</span><span class="val" id="detailRuntime">—</span></div>
+        <div class="facts-row" id="factLanguageRow" style="display:none"><span class="lbl">Language</span><span class="val" id="detailLanguageFacts">—</span></div>
+      </div>
+      <div id="legalWatchBtnContainer" style="display:none;margin-top:10px">
+        <a href="#" target="_blank" rel="noopener" class="legal-btn" id="legalWatchBtn"><i class="fa-solid fa-tv"></i> Watch Legally on Official Platforms</a>
+      </div>
+      <div id="triviaContainer" style="display:none;margin-top:10px">
+        <div class="tmdb-section-title" style="font-size:1rem">Trivia</div>
+        <p class="details-desc-text" id="detailTrivia"></p>
+      </div>
+    </div>
+
     <div id="subtitlesSection" style="display:none;margin-bottom:14px"><div class="tmdb-section-title" style="font-size:1rem">Subtitles</div><div id="subtitlesList" class="filters-bar"></div></div>
     <div id="seasonsSectionContainer" class="season-selector-card" style="display:none">
       <div class="season-header-row" onclick="toggleSeasonsDropdown()"><div class="season-header-title">Select Season</div><i id="seasonChevronIcon" class="fa-solid fa-chevron-down"></i></div>
@@ -875,7 +904,10 @@ window.closeProfileSetup = () => { document.getElementById('profileSetupModal').
 window.saveProfileSetup = async () => { if (!userUid) return; const name = document.getElementById('setupNameInput').value.trim().slice(0, 24); if (!name) { showToast('Please enter a name', 'fa-circle-exclamation'); return; } if (!selectedAvatarUrl) { showToast('Please pick an avatar', 'fa-circle-exclamation'); return; } const btn = document.getElementById('profileSetupSaveBtn'); btn.disabled = true; const origText = btn.textContent; btn.textContent = 'Saving…'; try { await updateDoc(doc(db, 'users', userUid), { displayName: name, avatarUrl: selectedAvatarUrl, profileCompleted: true, updatedAt: serverTimestamp() }); try { if (auth.currentUser) await updateProfile(auth.currentUser, { displayName: name }); } catch {} lsSet('kz_name', name); showToast('Profile saved', 'fa-circle-check'); closeProfileSetup(); } catch (e) { showToast('Save failed: ' + e.message, 'fa-circle-exclamation'); } finally { btn.disabled = false; btn.textContent = origText; } };
 
 const viewMap = { home: 'homePage', search: 'searchPage', chat: 'chatPage', profile: 'profilePage', settings: 'settingsPage', about: 'aboutPage', mylist: 'mylistPage' };
-window.switchNavTab = (tabName, fromRoute = false) => { resetPlayer(); document.body.classList.remove("details-active"); document.body.classList.remove("player-open"); Object.values(viewMap).forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; }); document.getElementById("categoryView").style.display = "none"; document.getElementById("detailsPage").style.display = "none"; document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active")); const btnMap = { home: 'navHomeBtn', search: 'navSearchBtn', chat: 'navChatBtn', mylist: 'navMylistBtn', profile: 'navProfileBtn' }; if (btnMap[tabName]) document.getElementById(btnMap[tabName]).classList.add("active"); if (viewMap[tabName]) document.getElementById(viewMap[tabName]).style.display = 'block'; if (tabName === 'chat') { initChatListener(); scrollChatBottom(true); markChatRead(); } if (tabName === 'profile') updateProfileUI(); if (tabName === 'mylist') renderMyList(); if (tabName === 'settings') { refreshSettingUI(); refreshAuthUI(); } if (tabName === 'about') { document.getElementById('aboutInstalledVersion').textContent = APP_VERSION; document.getElementById('aboutAvailableVersion').textContent = currentUpdateData?.version || '—'; } if (tabName === 'search') setTimeout(() => document.getElementById('searchInput').focus(), 100); if (!fromRoute) pushRoute('/' + tabName); window.scrollTo({ top: 0, behavior: "smooth" }); enhanceScrollRows(); };
+window.switchNavTab = (tabName, fromRoute = false) => { resetPlayer(); document.body.classList.remove("details-active"); document.body.classList.remove("player-open"); Object.values(viewMap).forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; }); document.getElementById("categoryView").style.display = "none"; document.getElementById("detailsPage").style.display = "none"; document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active")); const btnMap = { home: 'navHomeBtn', search: 'navSearchBtn', chat: 'navChatBtn', mylist: 'navMylistBtn', profile: 'navProfileBtn' }; if (btnMap[tabName]) document.getElementById(btnMap[tabName]).classList.add("active"); if (viewMap[tabName]) document.getElementById(viewMap[tabName]).style.display = 'block';
+  // Reset SEO when going back to home
+  if (tabName === 'home') { document.title = "KaziFlix"; const metaDesc = document.querySelector('meta[name="description"]'); if (metaDesc) metaDesc.setAttribute('content', "KaziFlix — Stream movies and TV shows."); }
+  if (tabName === 'chat') { initChatListener(); scrollChatBottom(true); markChatRead(); } if (tabName === 'profile') updateProfileUI(); if (tabName === 'mylist') renderMyList(); if (tabName === 'settings') { refreshSettingUI(); refreshAuthUI(); } if (tabName === 'about') { document.getElementById('aboutInstalledVersion').textContent = APP_VERSION; document.getElementById('aboutAvailableVersion').textContent = currentUpdateData?.version || '—'; } if (tabName === 'search') setTimeout(() => document.getElementById('searchInput').focus(), 100); if (!fromRoute) pushRoute('/' + tabName); window.scrollTo({ top: 0, behavior: "smooth" }); enhanceScrollRows(); };
 
 let progressPersistQueue = {};
 let progressPersistTimer = null;
@@ -1048,12 +1080,7 @@ async function loadMovieDetails(movie, fromRoute = false) {
   const langText = displayLanguage(movie.language);
   const langPill = document.getElementById("detailLanguage");
   const langTextEl = document.getElementById("detailLanguageText");
-  if (langText) {
-    langTextEl.textContent = langText;
-    langPill.style.display = "inline-flex";
-  } else {
-    langPill.style.display = "none";
-  }
+  if (langText) { langTextEl.textContent = langText; langPill.style.display = "inline-flex"; } else { langPill.style.display = "none"; }
 
   document.getElementById("detailDesc").innerText = movie.desc || "";
   document.getElementById("detailBackdrop").src = safeUrl(movie.backdrop || movie.image);
@@ -1061,6 +1088,50 @@ async function loadMovieDetails(movie, fromRoute = false) {
   updateLikeUI();
   fetchTMDbData(movie);
   if (!viewedThisSession.has(movie.id)) { viewedThisSession.add(movie.id); try { await updateDoc(doc(db, "movies", movie.id), { views: increment(1) }); } catch {} }
+
+  // ===== SEO & FACTS SECTION POPULATION =====
+  const factsSection = document.getElementById("factsSection");
+  let hasFacts = false;
+  if (movie.director) { document.getElementById("detailDirector").textContent = movie.director; document.getElementById("factDirectorRow").style.display = "flex"; hasFacts = true; } else { document.getElementById("factDirectorRow").style.display = "none"; }
+  if (movie.cast) { document.getElementById("detailCast").textContent = movie.cast; document.getElementById("factCastRow").style.display = "flex"; hasFacts = true; } else { document.getElementById("factCastRow").style.display = "none"; }
+  if (movie.runtime) { document.getElementById("detailRuntime").textContent = movie.runtime; document.getElementById("factRuntimeRow").style.display = "flex"; hasFacts = true; } else { document.getElementById("factRuntimeRow").style.display = "none"; }
+  if (langText) { document.getElementById("detailLanguageFacts").textContent = langText; document.getElementById("factLanguageRow").style.display = "flex"; hasFacts = true; } else { document.getElementById("factLanguageRow").style.display = "none"; }
+  if (hasFacts) factsSection.style.display = "block"; else factsSection.style.display = "none";
+
+  const legalBtnWrap = document.getElementById("legalWatchBtnContainer");
+  const legalBtn = document.getElementById("legalWatchBtn");
+  if (movie.legalWatchLink) { legalBtn.href = movie.legalWatchLink; legalBtnWrap.style.display = "block"; } else { legalBtnWrap.style.display = "none"; }
+
+  const triviaWrap = document.getElementById("triviaContainer");
+  if (movie.trivia) { document.getElementById("detailTrivia").textContent = movie.trivia; triviaWrap.style.display = "block"; } else { triviaWrap.style.display = "none"; }
+
+  // Dynamic SEO
+  const seoTitle = movie.seoTitle || `${movie.title} (${movie.releaseYear || ''}) - Watch Online | KaziFlix`;
+  const seoDesc = movie.seoDescription || `Watch ${movie.title} online. ${movie.desc ? movie.desc.substring(0, 150) + '...' : ''}`;
+  document.title = seoTitle;
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.setAttribute('content', seoDesc);
+
+  // JSON-LD Schema
+  const oldScript = document.getElementById('jsonLdScript');
+  if (oldScript) oldScript.remove();
+  const jsonLd = document.createElement('script');
+  jsonLd.id = 'jsonLdScript';
+  jsonLd.type = 'application/ld+json';
+  jsonLd.textContent = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Movie",
+    "name": movie.title,
+    "image": movie.image,
+    "description": movie.desc,
+    "director": movie.director ? { "@type": "Person", "name": movie.director } : undefined,
+    "actor": movie.cast ? movie.cast.split(',').map(c => ({ "@type": "Person", "name": c.trim() })) : undefined,
+    "datePublished": movie.releaseYear ? String(movie.releaseYear) : undefined,
+    "genre": movie.genre
+  });
+  document.head.appendChild(jsonLd);
+  // ===== END SEO & FACTS =====
+
   const subs = movie.subtitles || [];
   const subSection = document.getElementById("subtitlesSection");
   const subList = document.getElementById("subtitlesList");
